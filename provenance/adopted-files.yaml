@@ -1,0 +1,45 @@
+version: 1
+
+www_from_model:
+  repository: https://hub.psychoinformatics.de/www/www-from-model.git
+  commit: 6945272e5f3fcf353627b8e1c3e68bcaf76cc2ce
+  history_imported: false
+  license_note: >-
+    The upstream repository has no top-level license file at the reviewed
+    commit. Paths and commit identity are retained here; no additional
+    license grant is inferred.
+  exact_copies:
+    - assets/css/custom.css
+    - assets/icons/account-group.svg
+    - assets/icons/cast-education.svg
+    - assets/icons/human-dolly.svg
+    - assets/icons/mdi-microscope.svg
+    - config/_default/hugo.toml
+    - config/_default/languages.en.toml
+    - config/_default/markup.toml
+    - config/_default/menus.en.toml
+    - config/_default/module.toml
+    - config/_default/params.toml
+    - config/_default/taxonomies.toml
+    - layouts/_partials/home/custom.html
+    - layouts/_partials/home/page.html
+    - page_templates/homepage.md.j2
+    - page_templates/instrument.md.j2
+    - page_templates/page.md.j2
+    - page_templates/person.md.j2
+    - page_templates/project.md.j2
+    - page_templates/publication.md.j2
+
+congo:
+  repository: https://github.com/jpanther/congo.git
+  commit: 3623fa505ee42fee899844d94a4ff7f5a1ae9096
+  release: v2.13.0
+  path: themes/congo
+
+excluded_upstream_components:
+  - path: code/project.py
+    reason: TRR379-specific and unused by the reviewed upstream workflow
+  - path: .forgejo/workflows/register-depictions.yaml
+    reason: depends on the live pool, downloaded code, and git-annex
+  - path: .forgejo/workflows/deploy.yml
+    reason: targets a private Forgejo runner and a mutable webserver directory
