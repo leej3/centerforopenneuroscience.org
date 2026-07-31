@@ -1,0 +1,22 @@
+version: 1
+
+legacy_site:
+  repository: https://github.com/con/centerforopenneuroscience.org
+  ref: master
+  commit: e6e9200a0987a65097afff896105ff838be1659e
+  website: https://centerforopenneuroscience.org
+  preserved_branch: legacy-site
+  preserved_tag: legacy-site-2026-07-31
+
+www_from_model:
+  upstream_repository: https://hub.psychoinformatics.de/www/www-from-model.git
+  mirror_repository: https://github.com/con/www-from-model.git
+  ref: main
+  reviewed_commit: 6945272e5f3fcf353627b8e1c3e68bcaf76cc2ce
+  adoption: selective
+
+metadata_migration:
+  repository: https://github.com/con/dump-research-info.git
+  ref: agent/git-native-con-metadata
+  commit: 1c7e99ec6f296d5e6cb6a61e3b786227190802da
+  role: migration-source
