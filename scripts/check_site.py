@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 from html.parser import HTMLParser
+import json
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
@@ -51,10 +52,12 @@ REQUIRED_COMPATIBILITY_PATHS = [
 ]
 
 REQUIRED_ASSETS = [
+    "favicon.svg",
     "img/con-logo.png",
     "img/con-logo.svg",
     "img/datalad-logo.png",
     "img/yaroslav-halchenko.jpg",
+    "site.webmanifest",
 ]
 
 
@@ -135,6 +138,22 @@ def check_internal_links(site: Path, base_url: str) -> int:
     return checked
 
 
+def check_web_manifest(site: Path) -> int:
+    manifest = json.loads((site / "site.webmanifest").read_text(encoding="utf-8"))
+    if manifest.get("name") != "Center for Open Neuroscience":
+        raise SystemExit("Web manifest does not identify CON")
+    icons = manifest.get("icons")
+    if not isinstance(icons, list) or not icons:
+        raise SystemExit("Web manifest has no icons")
+    for icon in icons:
+        source = icon.get("src") if isinstance(icon, dict) else None
+        if not isinstance(source, str) or source.startswith("/"):
+            raise SystemExit(f"Web manifest icon is not base-path relative: {source!r}")
+        if not (site / source).is_file():
+            raise SystemExit(f"Web manifest icon is missing: {source}")
+    return len(icons)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("site", type=Path)
@@ -164,6 +183,7 @@ def main() -> None:
     if (args.site / "CNAME").exists():
         raise SystemExit("Preview must not publish the production CNAME")
     checked_links = check_internal_links(args.site, args.base_url)
+    checked_manifest_icons = check_web_manifest(args.site)
 
     entries = [
         f"{digest(path)}  {path.relative_to(args.site).as_posix()}"
@@ -175,7 +195,8 @@ def main() -> None:
         f"Verified {len(REQUIRED)} metadata pages, "
         f"{len(REQUIRED_COMPATIBILITY_PATHS)} compatibility paths, "
         f"{len(REQUIRED_ASSETS)} assets, and {len(entries)} site files"
-        f"; checked {checked_links} internal links"
+        f"; checked {checked_links} internal links and "
+        f"{checked_manifest_icons} manifest icons"
     )
 
 

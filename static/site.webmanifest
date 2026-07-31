@@ -1,0 +1,14 @@
+{
+  "name": "Center for Open Neuroscience",
+  "short_name": "CON",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#87AADE",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}

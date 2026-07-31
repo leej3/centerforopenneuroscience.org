@@ -71,3 +71,5 @@ locally_authored_boundaries:
   - metadata/records/
   - content/
   - layouts/_partials/extend-head.html
+  - layouts/_partials/favicons.html
+  - static/site.webmanifest
