@@ -1,0 +1,8 @@
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $class := .Get "class" | default "entity-depiction" -}}
+{{- with resources.Get $src -}}
+  <img src="{{ .RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="lazy">
+{{- else -}}
+  {{- errorf "asset-image could not find %q" $src -}}
+{{- end -}}

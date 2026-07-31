@@ -1,0 +1,118 @@
+version: 2
+slice: datalad
+status: milestone-1-reviewed-subset
+
+source_revision:
+  repository: https://github.com/con/dump-research-info.git
+  commit: 1c7e99ec6f296d5e6cb6a61e3b786227190802da
+  relationship_report: reports/research-slices/datalad.json
+
+records:
+  ror:04tfhh831:
+    class: XYZOrganization
+    source: data/con_site/XYZOrganization.json
+    retained: [pid, name, short_name, display_label, description, at_location]
+    omitted:
+      about: Source-evidence URL moved to this provenance layer.
+      part_of: Dartmouth is outside the five-record milestone closure.
+    derived_attributes:
+      - predicate: dcterms:relation
+        object: xyzrins:projects/datalad
+        evidence: DataLad appears in the pinned legacy CON project inventory.
+      - predicate: schema:member
+        object: xyzrins:persons/yaroslav-halchenko
+        evidence: The pinned legacy profile identifies Yaroslav as founding director.
+  xyzrins:persons/yaroslav-halchenko:
+    class: XYZPerson
+    source: data/con_site/XYZPerson.json
+    retained: [pid, given_name, additional_names, family_name, formatted_name,
+      display_label, description, identifiers, attributes]
+    omitted:
+      about: Source-evidence URL moved to this provenance layer.
+    derived_attributes:
+      - predicate: schema:memberOf
+        object: ror:04tfhh831
+        purpose: Reciprocal integrity for the selected organization membership.
+      - predicate: dcterms:relation
+        object: xyzrins:projects/datalad
+        evidence: The reviewed source links Yaroslav to DataLad as lead.
+  xyzrins:projects/datalad:
+    class: XYZProject
+    sources:
+      - data/con_site/XYZProject.json
+      - data/curated_relationships/XYZProject.json
+    retained_attributes:
+      - predicate: foaf:homepage
+        object: https://datalad.org
+      - predicate: schema:subjectOf
+        object: https://doi.org/10.21105/joss.03262
+      - predicate: dcterms:relation
+        object: xyzrins:instruments/datalad
+    transformed_relationships:
+      - source_predicate: associated_with
+        source_role: marcrel:led
+        candidate_predicate: dcterms:contributor
+        object: xyzrins:persons/yaroslav-halchenko
+        loss: Qualified lead role is not machine-readable in the canonical record.
+      - source_predicate: site inventory membership
+        candidate_predicate: dcterms:relation
+        object: ror:04tfhh831
+        evidence: DataLad appears in the pinned legacy CON project inventory.
+    omitted: >-
+      Four additional person associations, two grants, and two additional
+      publications remain in the migration source for Milestone 2.
+  https://doi.org/10.21105/joss.03262:
+    class: XYZPublication
+    source: data/zotero_centerforopenneuroscience/XYZPublication.json
+    source_snapshot: inputs/zotero_centerforopenneuroscience/snapshot.json
+    snapshot_library_version: 217
+    transformed_relationships:
+      - source_predicate: attributed_to
+        source_role: marcrel:aut
+        candidate_predicate: dcterms:creator
+        object: xyzrins:persons/yaroslav-halchenko
+        loss: Qualified author role is not machine-readable in the canonical record.
+      - candidate_predicate: schema:about
+        object: xyzrins:projects/datalad
+        purpose: Reciprocal integrity for the selected project/publication link.
+    identifier_decision: >-
+      DOI and ISSN notations are retained as generic dlthings:Identifier
+      values because the pinned end-to-end validator rejects the available
+      DOI and ISSN type designators. Their formats are enforced by
+      scripts/check_relationships.py.
+    omitted: >-
+      Thirteen additional author associations and the publication-venue
+      Generation container remain in the migration evidence. The preview
+      labels Yaroslav as the selected author and does not represent its subset
+      as a complete author list.
+  xyzrins:instruments/datalad:
+    class: XYZInstrument
+    source: data/pool_psychoinformatics_de/XYZInstrument.json
+    decision: >-
+      The source generated_by target xyzrins:projects/9fa7b1f5-a6e6-446e-aa52-7057f769c0ee
+      is absent from every migration input, so that unsupported edge is omitted.
+      The description is adapted from the reviewed CON DataLad project text.
+    derived_attribute:
+      predicate: schema:about
+      object: xyzrins:projects/datalad
+      purpose: Reciprocal integrity for the selected project/output link.
+
+compatibility_note: >-
+  Relationship substitutions above are typed AttributeSpecification objects
+  whose targets are strings, not native Thing graph edges. Standard qri link
+  traversal cannot discover them. The fixed milestone projection interprets
+  only these reviewed predicates and PIDs. See schema-compatibility.yaml.
+
+evidence:
+  legacy_site_commit: e6e9200a0987a65097afff896105ff838be1659e
+  legacy_project_page: content/pages/projects.html
+  legacy_person_page: content/pages/whoweare.html
+  external:
+    - https://www.datalad.org/
+    - https://joss.theoj.org/papers/10.21105/joss.03262
+
+scope_note: >-
+  These files are canonical for the milestone preview, but deliberately form a
+  reviewed subset. They do not claim completeness for DataLad membership or
+  publication authorship; full closure and restoration of native qualified
+  relations are Milestone 2 tasks.

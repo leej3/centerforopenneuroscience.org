@@ -1,0 +1,15 @@
+pid: ror:04tfhh831
+name: Center for Open Neuroscience
+short_name: CON
+display_label: Center for Open Neuroscience (CON)
+description: >-
+  Provides open software frameworks, platforms, data and methodologies for
+  neuroscience and beyond.
+at_location: https://www.wikidata.org/entity/Q131908
+attributes:
+  - schema_type: dlthings:AttributeSpecification
+    predicate: dcterms:relation
+    value: xyzrins:projects/datalad
+  - schema_type: dlthings:AttributeSpecification
+    predicate: schema:member
+    value: xyzrins:persons/yaroslav-halchenko

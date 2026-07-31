@@ -1,0 +1,5 @@
+type: records
+version: 1
+schema: ../schema/demo-research-information.static.yaml
+format: yaml
+idfx: after-last-colon

@@ -2,3 +2,9 @@
 * annex.backend=MD5E
 **/.git* annex.largefiles=nothing
 * annex.largefiles=((mimeencoding=binary)and(largerthan=0))
+
+# Orinoco Lite must be buildable from an ordinary GitHub checkout. Keep the
+# selected preview assets and comparison captures as normal Git objects.
+assets/img/** annex.largefiles=nothing
+provenance/legacy/** annex.largefiles=nothing
+static/** annex.largefiles=nothing

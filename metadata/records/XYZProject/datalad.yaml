@@ -1,0 +1,24 @@
+pid: xyzrins:projects/datalad
+title: DataLad
+short_name: DataLad
+display_label: DataLad
+description: >-
+  A data management platform that adapts open-source software distribution
+  models to address data-sharing limitations. It uses git-annex for large-data
+  tracking and builds on Git.
+attributes:
+  - schema_type: dlthings:AttributeSpecification
+    value: https://datalad.org
+    predicate: foaf:homepage
+  - schema_type: dlthings:AttributeSpecification
+    value: https://doi.org/10.21105/joss.03262
+    predicate: schema:subjectOf
+  - schema_type: dlthings:AttributeSpecification
+    value: xyzrins:instruments/datalad
+    predicate: dcterms:relation
+  - schema_type: dlthings:AttributeSpecification
+    value: ror:04tfhh831
+    predicate: dcterms:relation
+  - schema_type: dlthings:AttributeSpecification
+    value: xyzrins:persons/yaroslav-halchenko
+    predicate: dcterms:contributor
