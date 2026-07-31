@@ -1,38 +1,30 @@
 ---
-name: Check Links
+name: Validate Orinoco Lite preview
 
 on:
   pull_request:
-    branches:
-      - master
-  schedule:
-    - cron: '0 0 * * 0'  # every sunday 00:00 UTC
+    branches: [master]
+
+permissions:
+  contents: read
 
 jobs:
-  check_links:
+  validate:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Check out candidate and Congo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
 
-      - name: Install Requirements
-        run: |
-          pip install pelican linkchecker
+      - name: Install pinned uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.7.19"
+          python-version: "3.12"
+          enable-cache: true
 
-      - name: Start server
-        run: |
-          make html
-          make serve &
-          echo $! > server.pid
-          sleep 1
-
-      - name: Check links
-        run: |
-          # some sites forbid robots to access them
-          linkchecker --check-extern -f .linkcheckerrc -t 1 \
-            http://localhost:8000
-
-      - name: Stop Website Server
-        run: |
-          kill $(cat server.pid)
+      - name: Run the milestone publication contract
+        env:
+          BASE_URL: https://example.invalid/orinoco-lite-preview/
+        run: scripts/test-milestone.sh
