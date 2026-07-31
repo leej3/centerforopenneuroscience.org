@@ -1,0 +1,59 @@
+version: 1
+
+python_environment:
+  uv: 0.7.19
+  python: ">=3.11,<3.14 (CI uses 3.12)"
+  lockfile: uv.lock
+  package_count: 137
+
+orinoco:
+  dump_things_service:
+    repository: https://hub.psychoinformatics.de/orinoco/dump-things-service.git
+    commit: 9f101d97c7f15d491f602db5a9c33ad9a19ad8bf
+    resolved_version: 6.3.6
+  query_things:
+    repository: https://hub.psychoinformatics.de/orinoco/query-things.git
+    commit: ef1141430a471455d4a5f4e07d7989ec717f56f4
+    resolved_version: 0.1.dev40+gef1141430
+  dump_things_pyclient:
+    repository: https://hub.psychoinformatics.de/orinoco/dump-things-pyclient.git
+    commit: 1e79391195ad4412286344189dc5f81a06accb90
+    resolved_version: 0.3.0
+  linkml: 1.11.1
+  linkml_runtime: 1.11.1
+
+schema:
+  repository: https://hub.psychoinformatics.de/orinoco/things-schemas.git
+  commit: d26ea4135e28c25b134c64de1cdc15d15cd2f9f0
+  source_path: src/demo-research-information/unreleased.yaml
+  snapshot_url: https://concepts.datalad.org/s/demo-research-information/unreleased.static.yaml
+  retrieved_at: 2026-07-31T20:00:00Z
+  response_last_modified: 2026-07-02T09:37:19Z
+  snapshot_path: metadata/schema/demo-research-information.static.yaml
+  sha256: c21bb112d2275e0fcf3d68094c343005040ad59a26724917b3549e537e60968e
+  status: UNRELEASED draft vendored by checksum
+  license: MIT
+  license_notice_path: metadata/schema/LICENSE.things-schemas
+  license_notice_sha256: 340b39c29b2368a4743eb33e4286459988fbfd3a70ca89fbfc5f0ef51a741a99
+
+static_site:
+  hugo:
+    version: 0.154.5
+    edition: extended
+    installer: scripts/install-hugo.sh
+  congo:
+    repository: https://github.com/jpanther/congo.git
+    commit: 3623fa505ee42fee899844d94a4ff7f5a1ae9096
+    release: v2.13.0
+
+github_actions:
+  checkout: 3d3c42e5aac5ba805825da76410c181273ba90b1
+  setup_uv: c771a70e6277c0a99b617c7a806ffedaca235ff9
+  configure_pages: 45bfe0192ca1faeb007ade9deae92b16b8254a0d
+  upload_pages_artifact: fc324d3547104276b827a68afc52ff2a11cc49c9
+  deploy_pages: cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+reproducibility_note: >-
+  uv.lock pins the full Python dependency graph. The Hugo installer verifies
+  official archive checksums for supported macOS and Linux platforms. The
+  Congo gitlink and every workflow action are immutable commit pins.

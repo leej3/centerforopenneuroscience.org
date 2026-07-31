@@ -1,78 +1,53 @@
-/* STYLES FOR SUBMENU DROPDOWN FUNCTIONALITY */
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: relative;
+:root {
+  --con-footer: #38434c;
+  --con-reference: #f5f9ff;
+  --con-testimonial: #c4c8cd;
 }
 
-nav li {
-    position: relative;
+html {
+  font-family: "Open Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Add dropdown arrow for items with submenus */
-nav li > ul::before {
-    content: "";
-    display: none;
+header {
+  border-bottom: 1px solid rgb(var(--color-primary-200));
+  background: rgba(255, 255, 255, 0.96);
 }
 
-nav li:has(ul) > a::after {
-    content: "▼";
-    font-size: 0.5em;
-    margin-left: 2px;
-    position: absolute;
+header img {
+  max-height: 3.5rem;
+  width: auto;
 }
 
-/* Heading inside submenu dropdown */
-.submenu-heading {
-    font-weight: 700;
-    font-size: 0.9rem;
-    opacity: 0.75;
-    color: #333;
-    pointer-events: none;
-    margin-left: 0.25em;
+.con-home-logo img {
+  width: min(100%, 38rem);
+  margin: 1rem auto 2.5rem;
 }
 
-/* Submenu styles */
-nav ul ul {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: rgba(245, 245, 245, 0.95);
-    border-radius: 5px;
-    list-style: none;
-    padding: 2px 2px;
-    margin: 0 0 0 -10px;
-    min-width: 120px;
-    z-index: 1000;
+.entity-depiction {
+  max-width: min(100%, 30rem);
+  max-height: 22rem;
+  margin: 1.5rem auto 2.5rem;
+  object-fit: contain;
+  border-radius: 0.5rem;
 }
 
-/* Show submenu on hover */
-nav li:hover > ul {
-    display: block;
+footer {
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 1.5rem;
+  background: var(--con-footer);
+  color: white;
 }
 
-/* Submenu item styling */
-nav ul ul li {
-    padding: 2px 4px;
-    white-space: nowrap;
-    text-align: left;
+footer a {
+  color: white;
 }
 
-/* Submenu link styling */
-nav ul ul li a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    font-size: 0.9rem;
+blockquote {
+  border-left-color: rgb(var(--color-primary-500));
+  background: var(--con-reference);
+  padding: 1rem 1.25rem;
 }
 
-/* Hover effect on submenu items */
-nav ul ul li:hover {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    text-decoration-thickness: 2px;
-    text-decoration-color: rgba(var(--color-primary-500), 1);
+small code {
+  overflow-wrap: anywhere;
 }

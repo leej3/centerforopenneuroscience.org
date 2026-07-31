@@ -6,5 +6,7 @@
 # Orinoco Lite must be buildable from an ordinary GitHub checkout. Keep the
 # selected preview assets and comparison captures as normal Git objects.
 assets/img/** annex.largefiles=nothing
+metadata/schema/** annex.largefiles=nothing
+metadata/schema/demo-research-information.static.yaml whitespace=-blank-at-eof
 provenance/legacy/** annex.largefiles=nothing
 static/** annex.largefiles=nothing

@@ -1,38 +1,18 @@
-# -- Main Menu --
-# The main menu is displayed in the header at the top of the page.
-# Acceptable parameters are name, pageRef, page, url, title, weight.
-#
-# The simplest menu configuration is to provide:
-#   name = The name to be displayed for this menu link
-#   pageRef = The identifier of the page or section to link to
-#
-# By default the menu is ordered alphabetically. This can be
-# overridden by providing a weight value. The menu will then be
-# ordered by weight from lowest to highest.
+[[main]]
+  name = "Projects"
+  pageRef = "projects"
+  weight = 10
+  [main.params]
+    icon = "human-dolly"
+    showName = true
 
 [[main]]
   name = "People"
   pageRef = "persons"
-  weight = 10
-  [main.params]
-    icon = "account-group"
-    showName = false
-
-[[main]]
-  name = "Objectives"
-  pageRef = "objectives"
   weight = 20
   [main.params]
-    icon = "bullseye-arrow"
-    showName = false
-
-[[main]]
-  name = "Projects"
-  pageRef = "projects"
-  weight = 25
-  [main.params]
-    icon = "human-dolly"
-    showName = false
+    icon = "account-group"
+    showName = true
 
 [[main]]
   name = "Publications"
@@ -40,68 +20,27 @@
   weight = 30
   [main.params]
     icon = "cast-education"
-    showName = false
+    showName = true
 
 [[main]]
   name = "Outputs"
-  identifier = "outputs"
-  weight = 32
-  [main.params]
-    icon = "export"
-    showName = false
-
-[[main]]
-  name = "Datasets"
-  pageRef = "datasets"
-  parent = "outputs"
-  weight = 34
-  [main.params]
-    icon = "mdi-database-outline"
-    showName = false
-
-[[main]]
-  name = "Instruments"
   pageRef = "instruments"
-  parent = "outputs"
-  weight = 36
-  [main.params]
-    icon = "mdi-microscope"
-    showName = false
-
-[[main]]
-  name = "Topics"
-  pageRef = "topics"
-  weight = 38
-  [main.params]
-    icon = "pound-box-outline"
-    showName = false
-
-[[main]]
-  title = "Collaboration hub"
-  url = "https://hub.psychoinformatics.de"
   weight = 40
   [main.params]
-    icon = "forgejo-aneksajo"
-    showName = false
-    target = "_blank"
+    icon = "mdi-microscope"
+    showName = true
 
 [[main]]
-  identifier = "search"
-  weight = 99
-  [main.params]
-    action = "search"
+  name = "Engage"
+  pageRef = "engage"
+  weight = 50
 
-#[[main]]
-#  identifier = "locale"
-#  weight = 100
-#  [main.params]
-#    action = "locale"
-
-# -- Footer Menu --
-# The footer menu is displayed at the bottom of the page, just before
-# the copyright notice. Configure as per the main menu above.
+[[main]]
+  name = "Support"
+  pageRef = "support"
+  weight = 60
 
 [[footer]]
-   name = "Contact and location"
-   pageRef = "contact"
-   weight = 10
+  name = "Contact"
+  pageRef = "contact"
+  weight = 10

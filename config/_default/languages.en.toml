@@ -3,23 +3,10 @@ languageName = "English"
 languageDirection = "ltr"
 weight = 1
 
-title = "Psychoinformatics"
-copyright = "&copy; 2025-2026 Psychoinformatics group"
+title = "Center for Open Neuroscience"
+copyright = "CON website content is available under CC BY 3.0 unless otherwise noted."
 
 [params]
   dateFormat = "2 January 2006"
-
-  mainSections = ["posts", "projects"]
-  description = "Research in this lab focuses on the interface of computer and information sciences, neuroscience, and psychology."
-
-[params.author]
-  name = "Congo"
-  image = "img/author.jpg"
-  headline = "Not your ordinary theme!"
-  bio = "This is an example author bio, and although there's a stock photo of a dog here, this article was actually created by a human. :dog:"
-  links = [
-    { x-twitter = "https://twitter.com/" },
-    { facebook = "https://facebook.com/" },
-    { linkedin = "https://linkedin.com/" },
-    { youtube = "https://youtube.com/" },
-  ]
+  mainSections = ["projects"]
+  description = "Open software frameworks, platforms, data, and methodologies for neuroscience and beyond."

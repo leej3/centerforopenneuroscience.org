@@ -16,3 +16,8 @@ output/
 .#projects.html
 cache/
 __pycache__/
+.tools/
+.venv/
+.hugo_build.lock
+build*/
+public/

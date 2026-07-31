@@ -1,34 +1,50 @@
-version: 1
+version: 2
 
 www_from_model:
   repository: https://hub.psychoinformatics.de/www/www-from-model.git
   commit: 6945272e5f3fcf353627b8e1c3e68bcaf76cc2ce
+  import_commit: f803157
   history_imported: false
   license_note: >-
     The upstream repository has no top-level license file at the reviewed
-    commit. Paths and commit identity are retained here; no additional
-    license grant is inferred.
-  exact_copies:
-    - assets/css/custom.css
+    commit. Paths and commit identity are retained here; no additional license
+    grant is inferred.
+  current_exact_copies:
     - assets/icons/account-group.svg
     - assets/icons/cast-education.svg
     - assets/icons/human-dolly.svg
     - assets/icons/mdi-microscope.svg
-    - config/_default/hugo.toml
-    - config/_default/languages.en.toml
     - config/_default/markup.toml
-    - config/_default/menus.en.toml
-    - config/_default/module.toml
-    - config/_default/params.toml
     - config/_default/taxonomies.toml
-    - layouts/_partials/home/custom.html
-    - layouts/_partials/home/page.html
-    - page_templates/homepage.md.j2
-    - page_templates/instrument.md.j2
-    - page_templates/page.md.j2
-    - page_templates/person.md.j2
-    - page_templates/project.md.j2
-    - page_templates/publication.md.j2
+  adapted_after_import:
+    - path: assets/css/custom.css
+      reason: CON palette, typography, navigation, and selected asset treatment
+    - path: config/_default/hugo.toml
+      reason: static preview outputs, CNAME exclusion, and candidate defaults
+    - path: config/_default/languages.en.toml
+      reason: CON identity and metadata
+    - path: config/_default/menus.en.toml
+      reason: CON primary navigation
+    - path: config/_default/module.toml
+      reason: exact Hugo compatibility boundary
+    - path: config/_default/params.toml
+      reason: CON branding and no live-pool editing links
+    - path: layouts/_partials/home/custom.html
+      reason: remove upstream live graph and pool assumptions
+    - path: layouts/_partials/home/page.html
+      reason: candidate homepage rendering
+    - path: page_templates/homepage.md.j2
+      reason: organization-rooted connected preview
+    - path: page_templates/instrument.md.j2
+      reason: explicit path adapter and selected project relationship
+    - path: page_templates/page.md.j2
+      reason: explicit output path and deterministic metadata fingerprint
+    - path: page_templates/person.md.j2
+      reason: selected project relationship
+    - path: page_templates/project.md.j2
+      reason: temporary validated-attribute relationship projection
+    - path: page_templates/publication.md.j2
+      reason: DOI-safe path and explicitly partial authorship
 
 congo:
   repository: https://github.com/jpanther/congo.git
@@ -39,7 +55,19 @@ congo:
 excluded_upstream_components:
   - path: code/project.py
     reason: TRR379-specific and unused by the reviewed upstream workflow
+  - path: code/pool2graph.py
+    reason: graph presentation is not required for the vertical slice
   - path: .forgejo/workflows/register-depictions.yaml
     reason: depends on the live pool, downloaded code, and git-annex
   - path: .forgejo/workflows/deploy.yml
-    reason: targets a private Forgejo runner and a mutable webserver directory
+    reason: targets a private Forgejo runner and mutable webserver directory
+  - path: orinoco/flow@main
+    reason: mutable action replaced by repository-local pinned commands
+
+locally_authored_boundaries:
+  - .github/workflows/pages-preview.yml
+  - scripts/
+  - provenance/schema-compatibility.yaml
+  - metadata/records/
+  - content/
+  - layouts/_partials/extend-head.html

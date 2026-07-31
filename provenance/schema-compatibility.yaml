@@ -1,0 +1,68 @@
+version: 1
+status: temporary-downstream-divergence
+
+pinned_context:
+  dump_things_service_commit: 9f101d97c7f15d491f602db5a9c33ad9a19ad8bf
+  dump_things_service_version: 6.3.6
+  linkml_version: 1.11.1
+  linkml_runtime_version: 1.11.1
+  schema_commit: d26ea4135e28c25b134c64de1cdc15d15cd2f9f0
+  schema_sha256: c21bb112d2275e0fcf3d68094c343005040ad59a26724917b3549e537e60968e
+
+observed_failures:
+  native_containers:
+    classes: [Association, Attribution, Generation]
+    attempted_designators:
+      - dlthings aliases present in the migration input
+      - xyzri aliases advertised by the generated API model
+      - full things-prov class URIs inserted when the designator is omitted
+    result: >-
+      HTTP 422 from the collection validation endpoint. Internal LinkML
+      loading reports "Wrong type designator value" and says the base class
+      has no matching subclass.
+  typed_identifiers:
+    classes: [DOI, ISSN]
+    attempted_designators:
+      - dlthings aliases present in the migration input
+      - xyzri aliases advertised by the generated API model
+      - full things-publications class URIs
+    result: >-
+      HTTP 422. The generated API model and internal LinkML loader do not
+      accept a common discriminator; internal loading reports that Identifier
+      has no matching subclass.
+
+milestone_workaround:
+  qualified_relationships: >-
+    Preserve selected target PIDs in dlthings:AttributeSpecification values.
+    Use neutral or broadly applicable predicates and record the lost roles in
+    provenance/metadata-selection.yaml.
+  identifiers: >-
+    Preserve DOI and ISSN notations as generic dlthings:Identifier values and
+    enforce their formats in scripts/check_relationships.py.
+  integrity: >-
+    scripts/check_relationships.py checks unique PIDs, target existence and
+    class, required reciprocal links, five-record connectivity, and DOI/ISSN
+    formats. scripts/test_relationship_gate.py proves a dangling target stops
+    publication.
+  projection: >-
+    scripts/enrich_projection.py interprets the fixed reviewed predicates for
+    display. These attributes are not treated as native graph edges, and qri
+    relationship injection or inlining is deliberately not claimed.
+
+semantic_losses:
+  - marcrel:led on the selected DataLad project association
+  - marcrel:aut on the selected publication attribution
+  - native Association, Attribution, and Generation containers
+  - DOI and ISSN subtype and schema-pattern validation
+
+removal_condition: >-
+  Before the complete migration, pin a tested schema/service/toolchain in which
+  native Association, Attribution, Generation, DOI, and ISSN fixtures all pass
+  the Dump Things endpoint and round-trip through qri. Then migrate these
+  attributes back to native qualified relations and typed identifiers, remove
+  the fixed projection interpretations, and retain the compatibility probe as
+  a regression test.
+
+contribution_scope: >-
+  No generic upstream fix is claimed in Milestone 1. Any reusable fix must be
+  isolated and tested in the relevant Orinoco repository.
