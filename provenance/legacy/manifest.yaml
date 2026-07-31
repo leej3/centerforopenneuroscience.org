@@ -1,0 +1,43 @@
+version: 1
+captured_at: 2026-07-31T20:15:04Z
+website: https://centerforopenneuroscience.org
+legacy_source_commit: e6e9200a0987a65097afff896105ff838be1659e
+preserved_ref: legacy-site-2026-07-31
+
+screenshots:
+  - path: screenshots/homepage-1280x720.jpg
+    url: https://centerforopenneuroscience.org/
+    viewport: {width: 1280, height: 720}
+    media_type: image/jpeg
+    sha256: e3981ffe53080ad181ff5154eb7c67a44d95a9c6784a81c090cb0bcd503c8140
+  - path: screenshots/projects-datalad-1280x720.jpg
+    url: https://centerforopenneuroscience.org/projects#datalad_
+    viewport: {width: 1280, height: 720}
+    media_type: image/jpeg
+    sha256: c5fa536c67392633f9a2f91b56c602db0f3dbc562a36eb307e688dc2adaf394b
+  - path: screenshots/whoweare-yaroslav-1280x720.jpg
+    url: https://centerforopenneuroscience.org/whoweare#yaroslav_o_halchenko_
+    viewport: {width: 1280, height: 720}
+    media_type: image/jpeg
+    sha256: e42ad9d0ff67c1f5fee8ce0699f0be407711791bfa87fa900e7f1c40397df76c
+
+html_responses:
+  - path: html/homepage.html
+    url: https://centerforopenneuroscience.org/
+    status: 200
+    sha256: 000fbefb76e1ebf45a811b6afb6892f9675b6e719f4f85674d14b1a0ad4002f1
+  - path: html/projects.html
+    url: https://centerforopenneuroscience.org/projects
+    status: 200
+    sha256: 3f2f4026d45d0fb9cfbdec5fd69a13c7daf49c767345d2d6ee8e9970cfb48f04
+  - path: html/whoweare.html
+    url: https://centerforopenneuroscience.org/whoweare
+    status: 200
+    sha256: 4c26c5f9f9ab802cd47ecd186ee9bc4cd5266ae02a5912fa257bcdf5287283d6
+
+capture_tools:
+  screenshots: Codex in-app Chromium browser
+  html: curl with redirects enabled
+  note: >-
+    These are comparison evidence only. They are not inputs to the candidate
+    build and do not claim to archive the complete deployed site.

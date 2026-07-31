@@ -1,0 +1,52 @@
+version: 1
+captured_at: 2026-07-31T20:15:04Z
+
+public_pages:
+  - legacy_path: /
+    legacy_status: 200
+    candidate_path: /
+  - legacy_path: /projects
+    legacy_status: 200
+    candidate_path: /projects/
+  - legacy_path: /projects.html
+    legacy_status: 200
+    candidate_alias: /projects.html
+  - legacy_path: /projects#datalad_
+    legacy_status: 200
+    candidate_compatibility_anchor: /projects/#datalad_
+    canonical_candidate_path: /projects/datalad/
+  - legacy_path: /whoweare
+    legacy_status: 200
+    candidate_compatibility_path: /whoweare/
+  - legacy_path: /whoweare.html
+    legacy_status: 200
+    candidate_alias: /whoweare.html
+  - legacy_path: /whoweare#yaroslav_o_halchenko_
+    legacy_status: 200
+    candidate_compatibility_anchor: /whoweare/#yaroslav_o_halchenko_
+    canonical_candidate_path: /persons/yaroslav-halchenko/
+  - legacy_path: /engage
+    legacy_status: 200
+    candidate_path: /engage/
+  - legacy_path: /engage.html
+    legacy_status: 200
+    candidate_alias: /engage.html
+  - legacy_path: /support
+    legacy_status: 200
+    candidate_path: /support/
+  - legacy_path: /support.html
+    legacy_status: 200
+    candidate_alias: /support.html
+
+representative_assets:
+  - /theme/vendor/bootstrap/dist/css/bootstrap.min.css
+  - /theme/vendor/buddycloud-styles/dist/css/buddycloud-styles.css
+  - /theme/css/site.css
+  - /theme/img/logos/logo_blue_big.svg
+  - /theme/img/team/yarik.jpg
+  - /theme/img/3rd/datalad_logo.png
+
+scope_note: >-
+  Milestone 1 preserves the primary navigation URLs and the selected DataLad
+  and Yaroslav entry points. Full URL and asset parity belongs to the complete
+  migration and cutover milestones.

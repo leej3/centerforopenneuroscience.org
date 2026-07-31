@@ -1,0 +1,38 @@
+version: 1
+observed_at: 2026-07-31T20:15:04Z
+website: https://centerforopenneuroscience.org
+
+deployed_values:
+  primary_blue: "#87AADE"
+  footer_dark: "#38434C"
+  references_background: "#F5F9FF"
+  testimonial_gray: "#C4C8CD"
+  body_text: "#333333"
+  body_background: "#FFFFFF"
+  body_font: Open Sans
+  code_font: Source Code Pro
+  font_delivery: Google Fonts stylesheets referenced by the deployed HTML
+  body_size: 16px
+  desktop_heading_1_size: 48px
+  footer_size: 14px
+  navigation: fixed top bar
+  desktop_hero_width: 960px
+
+source_values:
+  sass_primary_blue: "#2DAEBF"
+  note: >-
+    The Sass source value differs from the compiled deployed blue. Candidate
+    styling uses the observed deployed color where visual continuity matters.
+
+comparison_scope:
+  - brand palette and logo treatment
+  - fixed desktop navigation
+  - Open Sans body typography
+  - legibility and selected asset presentation
+  - primary navigation information architecture
+
+non_goal: Pixel-for-pixel reproduction is outside Milestone 1.
+
+candidate_font_note: >-
+  The candidate loads Open Sans and Source Code Pro from Google Fonts in
+  layouts/_partials/extend-head.html, matching the legacy delivery approach.

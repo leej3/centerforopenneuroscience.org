@@ -9,4 +9,5 @@ assets/img/** annex.largefiles=nothing
 metadata/schema/** annex.largefiles=nothing
 metadata/schema/demo-research-information.static.yaml whitespace=-blank-at-eof
 provenance/legacy/** annex.largefiles=nothing
+provenance/legacy/html/** whitespace=-trailing-space,-space-before-tab
 static/** annex.largefiles=nothing
