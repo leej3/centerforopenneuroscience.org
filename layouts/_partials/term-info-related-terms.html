@@ -1,0 +1,15 @@
+{{ $term := .term }}
+{{ $taxonomy := .taxonomy }}
+{{ $display := .display }}
+{{ with $term.GetTerms $taxonomy }}
+  <div class="metadata-term-chips">
+    <em>{{ $display }}:</em>
+    {{ range . }}
+      {{ if .Page.Params.Title }}
+        <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      {{ else }}
+        <span>{{ .Title | humanize }}</span>
+      {{ end }}
+    {{ end }}
+  </div>
+{{ end }}

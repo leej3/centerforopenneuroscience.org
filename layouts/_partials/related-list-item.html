@@ -1,0 +1,8 @@
+<span class="metadata-related-item">
+  {{ with .Params.externalUrl }}
+    <a href="{{ . }}" target="_blank" rel="external noopener">{{ $.Title | emojify }}</a>
+    <span aria-hidden="true">↗</span>
+  {{ else }}
+    <a href="{{ .RelPermalink }}">{{ .Title | emojify }}</a>
+  {{ end }}
+</span>

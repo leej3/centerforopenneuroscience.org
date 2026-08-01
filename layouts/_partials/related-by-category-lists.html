@@ -1,0 +1,22 @@
+<div class="metadata-related-groups">
+  {{ range .Pages.GroupBy "Type" }}
+    {{ if ne .Key "page" }}
+      <details class="metadata-related-group" open>
+        <summary>{{ .Key | humanize | title }} <span aria-hidden="true">({{ len .Pages }})</span></summary>
+        <ul>
+          {{ $linkPartial := printf "related-%s-list-item.html" .Key }}
+          {{ $linkTemplate := printf "_partials/%s" $linkPartial }}
+          {{ range .Pages.ByParam "sortkey" }}
+            <li>
+              {{ if templates.Exists $linkTemplate }}
+                {{ partial $linkPartial . }}
+              {{ else }}
+                {{ partial "related-list-item.html" . }}
+              {{ end }}
+            </li>
+          {{ end }}
+        </ul>
+      </details>
+    {{ end }}
+  {{ end }}
+</div>

@@ -5,30 +5,61 @@ not merge or graft the complete `www-from-model` history. The clean mirror in
 `con/www-from-model` remains at reviewed upstream commit
 `6945272e5f3fcf353627b8e1c3e68bcaf76cc2ce`.
 
-Exact paths, commits, and current exact-versus-adapted classifications are in
-`provenance/adopted-files.yaml`; all tool and schema pins are in
+## Responsibility split
+
+Milestone 1 deliberately combines four sources:
+
+| Source | What the candidate uses |
+| --- | --- |
+| Legacy CON site | CON identity, wording, public compatibility URLs, visual values, logos, DataLad depiction, and Yaroslav's annexed portrait |
+| `www-from-model` | Hugo/Congo scaffold, class taxonomies, metadata page-bundle pattern, related-record layouts, filterable lists, and the `qri` cache/list/inline/render pipeline |
+| Pinned Orinoco components | Schema, ephemeral Dump Things validation, `dtc`, `qri`, and the separately maintained Things graph renderer |
+| `dump-research-info` | Reviewed records, source evidence, and migration decisions only; it is not a build or deployment dependency |
+
+The visual result is a CON adaptation rather than a copy of the
+Psychoinformatics site. Exact paths and exact-versus-adapted classifications
+are in `provenance/adopted-files.yaml`; tool and schema pins are in
 `provenance/toolchain.yaml`.
 
-## Milestone 1 divergences
+## Retained upstream behavior and deliberate differences
 
 | Upstream behavior | CON candidate behavior | Reason |
 | --- | --- | --- |
-| Read changing `public` collection from the Psychoinformatics pool | Build an isolated `research_info` collection from repository YAML | No persistent service or independently changing production input |
+| Read a changing `public` collection from the Psychoinformatics pool | Build an isolated `research_info` collection from repository YAML | No persistent service or independently changing production input |
+| Validate and then generate through Dump Things and `qri` | Post the exact transient record streams with upstream `dtc`, then retain `qri cache`, `list`, `inline-records`, and `render-record` | Upstream validation and generation remain the publication path without a custom parallel validator |
+| Generate class-specific `_index.md` term bundles | Generate every record with one generic template into an ignored build workspace | Adding a record must not require committed record pages or a new class-specific template |
+| Native qualified relations drive inlining and taxonomy navigation | One generic temporary projection emits `links_out`/`links_in`, forward Hugo taxonomy terms, and raw source assertions before `qri` inlines them; Hugo `.Data.Pages` supplies reverse backlinks | The pinned LinkML/schema/service tuple cannot round-trip native relation subclasses; the displayed graph and reverse navigation still come from metadata |
+| Large full-page graph supplied separately | Adapt `things-graph-renderer` commit `04f6241e37532fdb03b6f95d2dbe304e7171d504` into a compact side graph limited to the current record's immediate neighborhood | Preserve graph-guided navigation while keeping page content primary and Pages base paths safe |
 | Root organization PID `xyzrins:.` | Root PID `ror:04tfhh831` | Stable reviewed CON identity |
-| Derive content paths directly from PIDs | Explicit reviewed PID-to-path adapter | DOI URLs and Pages subpaths are not safe implicit slugs |
-| Inject and inline native graph relations through qri | Cache/list/render with qri; temporarily interpret validated string-valued attributes | Pinned validator/type-designator incompatibility documented in `provenance/schema-compatibility.yaml` |
 | Root-relative assets and links | Hugo-relative links with a Pages-provided base URL | Fork project Pages must work below a path prefix |
+| Live depiction registration from the pool | Repository page-bundle symlinks to reviewed legacy assets; Yaroslav's payload is retrieved by git-annex from `datasets.datalad.org` | Deterministic assets without a live metadata pool or replacing annex content with a Git blob |
 | Forgejo runner deploy to `/www` | Fork-only GitHub Pages artifact deployment | Preview without production domain or DNS changes |
-| Live depiction registration and git-annex | Reviewed assets committed as normal Git objects | Self-contained static build and unavailable legacy annex payloads |
 
-The relationship compatibility mapping is CON-specific and is not presented as
-a reusable upstream fix. Native qualified relations must be restored after a
-compatible pinned schema/service path is proven.
+`scripts/project_records.py` is the only schema-compatibility projection. For
+each configured relationship predicate it requires a target in the loaded
+record pool, independent of whether that PID is a CURIE or URL, and applies
+generic predicate rules; it has no CON PID, label, route, or asset table.
+Taxonomy assignment follows the normalized edge direction, except that
+symmetric `related_to` is assigned both ways. Each edge carries its unmodified
+source, predicate, and target assertion so a later compatible upstream pin can
+regenerate native relations without reverse-engineering the rendered site.
+
+This is not a claim that native qualified relation containers already work.
+The precise failure, source-role limitations, tested alternatives, and removal
+condition are documented in `docs/upstream-schema-discriminator-issue.md` and
+`provenance/schema-compatibility.yaml`.
 
 ## Synchronization policy
 
-Review new upstream commits deliberately against the recorded commit. Copy or
-cherry-pick only the useful paths, update provenance classifications, and run
-`scripts/test-milestone.sh` before changing a pin. Develop generally useful
-fixes on focused branches in `con/www-from-model` and offer them upstream
-separately from CON metadata, content, policy, or presentation.
+Review new component releases as a compatible tuple: schema, Dump Things
+service and client, `qri`, and LinkML runtime. First run the recorded native
+Association, Attribution, Generation, DOI, and ISSN fixtures. Only a tuple that
+passes both the direct post and `qri` round trip replaces the current pins.
+Then update the schema snapshot and generated results and remove the temporary
+relationship normalization; do not add version-specific PID or field tables.
+
+Review new `www-from-model` and Things graph renderer commits deliberately
+against their recorded commits. Copy or cherry-pick only useful paths, update
+the provenance classifications, and run `pixi run --locked test-milestone`
+before changing a pin. Generally useful fixes belong on focused upstream
+branches; CON metadata, content, policy, and presentation remain downstream.

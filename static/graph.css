@@ -1,0 +1,41 @@
+.metadata-home-layout, .metadata-term-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 32%);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+.metadata-home-graph, .metadata-term-graph { position: sticky; top: 1rem; min-width: 0; }
+.metadata-graph {
+  overflow: hidden;
+  border: 1px solid rgb(229 229 229);
+  border-radius: .65rem;
+  background: rgb(250 250 250);
+}
+.metadata-graph-description { margin: .75rem .75rem 0; font-size: .85rem; }
+.metadata-graph-canvas { position: relative; aspect-ratio: 4 / 3; min-height: 14rem; }
+.metadata-graph-canvas svg { display: block; width: 100%; height: 100%; }
+.metadata-graph-status { padding: 1rem; color: rgb(82 82 82); font-size: .85rem; }
+.metadata-graph-controls { display: flex; flex-wrap: wrap; gap: .35rem .75rem; border-top: 1px solid rgb(229 229 229); padding: .65rem .75rem; font-size: .72rem; }
+.metadata-graph-controls label { display: inline-flex; align-items: center; gap: .25rem; cursor: pointer; }
+.metadata-graph-alternative { border-top: 1px solid rgb(229 229 229); padding: .55rem .75rem; font-size: .75rem; }
+.metadata-graph-alternative summary { cursor: pointer; font-weight: 600; }
+.metadata-graph-alternative ul { margin: .5rem 0 0; padding-left: 1.2rem; }
+.metadata-graph-node { cursor: pointer; }
+.metadata-graph-node circle { stroke: white; stroke-width: 2; }
+.metadata-graph-node:focus circle, .metadata-graph-node:hover circle { stroke: rgb(var(--color-primary-600)); stroke-width: 4; }
+.metadata-graph-node text { pointer-events: none; fill: rgb(38 38 38); font: 600 13px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; }
+.metadata-graph-edge { stroke: rgb(115 115 115 / .55); stroke-width: 1.5; }
+.metadata-term-depiction { max-width: 28rem; margin: 1.5rem auto; }
+.metadata-term-depiction img { max-height: 22rem; margin: auto; object-fit: contain; }
+.metadata-record-id { color: rgb(82 82 82); font-size: .8rem; }
+.metadata-term-content-with-toc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, 15rem); gap: 1rem; }
+.metadata-term-toc { order: 2; }
+
+.dark .metadata-graph { border-color: rgb(64 64 64); background: rgb(38 38 38); }
+.dark .metadata-graph-controls, .dark .metadata-graph-alternative { border-color: rgb(64 64 64); }
+.dark .metadata-graph-node text { fill: rgb(229 229 229); }
+
+@media (max-width: 900px) {
+  .metadata-home-layout, .metadata-term-layout { grid-template-columns: 1fr; }
+  .metadata-home-graph, .metadata-term-graph { position: static; width: min(100%, 34rem); }
+}

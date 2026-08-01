@@ -23,29 +23,34 @@ jobs:
       - name: Check out candidate and Congo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           submodules: recursive
 
-      - name: Install pinned uv and Python
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Install the locked build environment
+        uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11 # v0.9.6
         with:
-          version: "0.7.19"
-          python-version: "3.12"
-          enable-cache: true
+          pixi-version: v0.73.0
+          cache: true
+          locked: true
+
+      - name: Retrieve the required legacy annex content
+        run: |
+          pixi run --locked git annex init github-actions
+          git remote add datasets.datalad.org https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+          git fetch datasets.datalad.org git-annex:refs/remotes/datasets.datalad.org/git-annex
+          pixi run --locked git annex enableremote datasets.datalad.org
+          pixi run --locked git annex get --from datasets.datalad.org assets/img/yaroslav-halchenko.jpg
+          pixi run --locked git annex fsck --fast assets/img/yaroslav-halchenko.jpg
 
       - name: Read the fork Pages configuration
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - name: Run the milestone publication contract
-        env:
-          BASE_URL: https://example.invalid/orinoco-lite-preview/
-        run: scripts/test-milestone.sh
-
       - name: Build with the Pages-provided base URL
         env:
           BASE_URL: ${{ steps.pages.outputs.base_url }}/
           BUILD_DIR: build-pages
-        run: scripts/build.sh
+        run: pixi run --locked build
 
       - name: Upload the static preview
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

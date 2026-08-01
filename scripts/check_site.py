@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check required preview pages and write a deterministic site manifest."""
+"""Check the generic metadata site contract and write a deterministic manifest."""
 
 from __future__ import annotations
 
@@ -8,37 +8,9 @@ import hashlib
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+from typing import Any
 from urllib.parse import unquote, urljoin, urlparse
 
-
-REQUIRED = {
-    "index.html": ["Center for Open Neuroscience", "ror:04tfhh831", "DataLad"],
-    "persons/yaroslav-halchenko/index.html": [
-        "Yaroslav O. Halchenko",
-        "xyzrins:persons/yaroslav-halchenko",
-        "Connected projects",
-        "DataLad",
-    ],
-    "projects/datalad/index.html": [
-        "DataLad",
-        "xyzrins:projects/datalad",
-        "Related publication",
-        "Software output",
-        "Center for Open Neuroscience",
-        "Yaroslav O. Halchenko",
-    ],
-    "publications/datalad-joss-2021/index.html": [
-        "10.21105/joss.03262",
-        "Selected author",
-        "Yaroslav O. Halchenko",
-    ],
-    "instruments/datalad/index.html": [
-        "DataLad software",
-        "xyzrins:instruments/datalad",
-        "Connected project",
-        "DataLad",
-    ],
-}
 
 REQUIRED_COMPATIBILITY_PATHS = [
     "engage.html",
@@ -53,12 +25,21 @@ REQUIRED_COMPATIBILITY_PATHS = [
 
 REQUIRED_ASSETS = [
     "favicon.svg",
+    "filter-list.css",
+    "filter-list.js",
+    "graph.css",
+    "graph.js",
+    "graph.json",
+    "grid-list.css",
     "img/con-logo.png",
-    "img/con-logo.svg",
-    "img/datalad-logo.png",
-    "img/yaroslav-halchenko.jpg",
     "site.webmanifest",
 ]
+
+REQUIRED_DEPICTION_PATHS = {
+    "instruments/datalad",
+    "persons/yaroslav-halchenko",
+    "projects/datalad",
+}
 
 
 class PageParser(HTMLParser):
@@ -76,7 +57,7 @@ class PageParser(HTMLParser):
                 continue
             if name in {"id", "name"}:
                 self.ids.add(value)
-            elif name in {"href", "src"}:
+            elif name in {"href", "src", "data-graph-url", "data-site-root"}:
                 self.references.append(value)
 
 
@@ -99,6 +80,7 @@ def page_url(relative: Path) -> str:
 
 
 def check_internal_links(site: Path, base_url: str) -> int:
+    base_url = base_url.rstrip("/") + "/"
     parsed_base = urlparse(base_url)
     base_path = parsed_base.path.rstrip("/") + "/"
     parsed_pages: dict[Path, PageParser] = {}
@@ -154,34 +136,110 @@ def check_web_manifest(site: Path) -> int:
     return len(icons)
 
 
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+    if not records:
+        raise SystemExit("Projection contains no records")
+    return records
+
+
+def record_page(site: Path, record: dict[str, Any]) -> Path:
+    route = str(record["site_path"])
+    return site / route / "index.html" if route else site / "index.html"
+
+
+def check_metadata_pages(
+    site: Path, records: list[dict[str, Any]], graph: dict[str, Any]
+) -> tuple[int, int]:
+    by_pid = {str(record["pid"]): record for record in records}
+    page_text: dict[str, str] = {}
+    for pid, record in by_pid.items():
+        path = record_page(site, record)
+        if not path.is_file():
+            raise SystemExit(f"Missing projected page for {pid}: {path.relative_to(site)}")
+        text = path.read_text(encoding="utf-8")
+        page_text[pid] = text
+        for value in (
+            record["page_title"],
+            pid,
+            "metadata-graph",
+            "data-graph-links",
+        ):
+            if str(value) not in text:
+                raise SystemExit(
+                    f"{path.relative_to(site)} does not contain {value!r}"
+                )
+        route = str(record["site_path"])
+        if route:
+            index = site / str(record["class_section"]) / "index.html"
+            if not index.is_file() or str(record["page_title"]) not in index.read_text(
+                encoding="utf-8"
+            ):
+                raise SystemExit(f"Class index does not list {pid}")
+        if route in REQUIRED_DEPICTION_PATHS and "metadata-term-depiction" not in text:
+            raise SystemExit(f"Projected term has no bundle depiction: {route}")
+
+    expected_pages = {
+        Path(str(record["site_path"])) / "index.html"
+        for record in records
+        if record["site_path"]
+    }
+    for section in {str(record["class_section"]) for record in records}:
+        section_root = site / section
+        if not section_root.is_dir():
+            continue
+        for path in section_root.rglob("index.html"):
+            relative = path.relative_to(site)
+            if relative == Path(section) / "index.html":
+                continue
+            if relative not in expected_pages:
+                raise SystemExit(
+                    "Entity page is not backed by projected metadata: "
+                    f"{relative.as_posix()}"
+                )
+
+    graph_nodes = graph.get("nodes")
+    graph_edges = graph.get("edges")
+    if not isinstance(graph_nodes, list) or not isinstance(graph_edges, list):
+        raise SystemExit("graph.json does not contain node and edge lists")
+    node_pids = {str(node.get("id")) for node in graph_nodes}
+    if node_pids != set(by_pid):
+        raise SystemExit("graph.json nodes do not match projected records")
+    for node in graph_nodes:
+        if node.get("url") != by_pid[str(node["id"])]["page_url"]:
+            raise SystemExit(f"Graph node URL disagrees with projection: {node['id']}")
+    for edge in graph_edges:
+        source = str(edge.get("source"))
+        target = str(edge.get("target"))
+        if source not in by_pid or target not in by_pid or not edge.get("type"):
+            raise SystemExit(f"Invalid graph edge: {edge}")
+        if edge.get("type") == "related_to" and edge.get("symmetric") is not True:
+            raise SystemExit(f"Symmetric graph edge lost its semantics: {edge}")
+        if str(by_pid[target]["page_title"]) not in page_text[source]:
+            raise SystemExit(f"Source page does not navigate to related record: {source}")
+        if str(by_pid[source]["page_title"]) not in page_text[target]:
+            raise SystemExit(f"Target page has no reverse navigation: {target}")
+    return len(by_pid), len(graph_edges)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("site", type=Path)
     parser.add_argument("--base-url", required=True)
+    parser.add_argument("--projected-records", type=Path, required=True)
+    parser.add_argument("--graph", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     args = parser.parse_args()
 
-    for relative, needles in REQUIRED.items():
-        path = args.site / relative
-        if not path.is_file():
-            raise SystemExit(f"Missing required preview page: {relative}")
-        text = path.read_text(encoding="utf-8")
-        for needle in needles:
-            if needle not in text:
-                raise SystemExit(f"{relative} does not contain {needle!r}")
     for relative in REQUIRED_COMPATIBILITY_PATHS + REQUIRED_ASSETS:
         if not (args.site / relative).is_file():
             raise SystemExit(f"Missing required preview path: {relative}")
-    anchor_checks = {
-        "projects/index.html": "id=datalad_",
-        "whoweare/index.html": "id=yaroslav_o_halchenko_",
-    }
-    for relative, needle in anchor_checks.items():
-        text = (args.site / relative).read_text(encoding="utf-8")
-        if needle not in text:
-            raise SystemExit(f"{relative} does not retain {needle!r}")
     if (args.site / "CNAME").exists():
         raise SystemExit("Preview must not publish the production CNAME")
+
+    records = load_jsonl(args.projected_records)
+    graph = json.loads(args.graph.read_text(encoding="utf-8"))
+    record_count, edge_count = check_metadata_pages(args.site, records, graph)
     checked_links = check_internal_links(args.site, args.base_url)
     checked_manifest_icons = check_web_manifest(args.site)
 
@@ -192,10 +250,10 @@ def main() -> None:
     ]
     args.manifest.write_text("\n".join(entries) + "\n", encoding="utf-8")
     print(
-        f"Verified {len(REQUIRED)} metadata pages, "
+        f"Verified {record_count} metadata pages, {edge_count} graph edges, "
         f"{len(REQUIRED_COMPATIBILITY_PATHS)} compatibility paths, "
-        f"{len(REQUIRED_ASSETS)} assets, and {len(entries)} site files"
-        f"; checked {checked_links} internal links and "
+        f"{len(REQUIRED_ASSETS)} functional assets, and {len(entries)} site files; "
+        f"checked {checked_links} internal links and "
         f"{checked_manifest_icons} manifest icons"
     )
 

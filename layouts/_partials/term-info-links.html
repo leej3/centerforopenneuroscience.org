@@ -1,0 +1,8 @@
+{{ with .Params.external_links }}
+  <div class="metadata-term-chips">
+    <em>Links:</em>
+    {{ range . }}
+      <a href="{{ .url }}" target="_blank" rel="external noopener">{{ .label }}</a>
+    {{ end }}
+  </div>
+{{ end }}

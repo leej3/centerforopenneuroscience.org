@@ -1,0 +1,85 @@
+{{ define "main" }}
+  {{ $toc := and (.Params.showTableOfContents | default (.Site.Params.list.showTableOfContents | default false)) (in .TableOfContents "<ul") }}
+  {{ $taxonomy := .Data.Plural }}
+  {{ $taxonomyPage := site.GetPage $taxonomy }}
+  {{ $depictionType := "depiction" }}
+  {{ $personDisplay := "Contributors" }}
+  {{ $relationsDisplay := "expandable" }}
+  {{ with $taxonomyPage }}
+    {{ $depictionType = .Params.term.depiction_type | default $depictionType }}
+    {{ $personDisplay = .Params.term.person_display | default $personDisplay }}
+    {{ $relationsDisplay = .Params.term.show_relations | default $relationsDisplay }}
+  {{ end }}
+  {{ $depictions := .Resources.Match (printf "%s.*" $depictionType) }}
+
+  <link rel="stylesheet" href="{{ "graph.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "filter-list.css" | relURL }}">
+  <header>
+    {{ if .Params.showBreadcrumbs | default (.Site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-0 mb-2 flex flex-wrap items-center gap-2 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+      <span>{{ .Title }}</span>
+      {{ with .Params.date }}
+        <span class="text-2xl font-normal">({{ substr (printf "%v" .) 0 4 }})</span>
+      {{ end }}
+      {{ partial "term-heading-kind.html" (dict "term" .) }}
+      {{ partial "term-heading-identifiers.html" (dict "term" .) }}
+      {{ partial "term-heading-links.html" (dict "term" .) }}
+    </h1>
+  </header>
+
+  <div class="metadata-term-layout">
+    <article class="metadata-term-main prose max-w-full dark:prose-invert">
+      {{ partial "term-info-links.html" . }}
+      {{ partial "term-info-related-terms.html" (dict "term" . "taxonomy" "persons" "display" $personDisplay) }}
+      {{ partial "term-info-related-terms.html" (dict "term" . "taxonomy" "projects" "display" "Projects") }}
+      {{ partial "term-info-related-terms.html" (dict "term" . "taxonomy" "publications" "display" "Publications") }}
+      {{ partial "term-info-related-terms.html" (dict "term" . "taxonomy" "instruments" "display" "Outputs") }}
+      {{ partial "term-info-licenses.html" . }}
+
+      {{ with index $depictions 0 }}
+        <figure class="metadata-term-depiction">
+          {{ if eq .MediaType.SubType "svg" }}
+            <img src="{{ .RelPermalink }}" alt="{{ $.Title }}">
+          {{ else }}
+            {{ $image := .Fit "640x480" }}
+            <img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="{{ $.Title }}">
+          {{ end }}
+        </figure>
+      {{ end }}
+
+      {{ with .Params.description }}
+        <p>{{ . | markdownify }}</p>
+      {{ end }}
+      {{ with .Param "metadataPID" }}
+        <p class="metadata-record-id">Metadata record: <code>{{ . }}</code></p>
+      {{ end }}
+
+      <section class="metadata-term-content{{ if $toc }} metadata-term-content-with-toc{{ end }}">
+        {{ if $toc }}
+          <aside class="metadata-term-toc">{{ partial "toc.html" . }}</aside>
+        {{ end }}
+        <div>{{ .Content | emojify }}</div>
+      </section>
+    </article>
+
+    {{ if .Param "graphRootNodePID" }}
+      <aside class="metadata-term-graph" aria-label="Related metadata graph">
+        {{ partial "metadata-graph.html" . }}
+      </aside>
+    {{ end }}
+  </div>
+
+  {{ if .Data.Pages }}
+    {{ if eq $relationsDisplay "congo" }}
+      {{ partial "term-relations.html" . }}
+    {{ else if eq $relationsDisplay "expandable" }}
+      <section class="metadata-relations">
+        <h2 class="mt-12 text-2xl font-bold text-neutral-700 dark:text-neutral-300">Related records</h2>
+        <hr class="mb-2 w-36 border-dotted border-neutral-400">
+        {{ partial "related-by-category-lists.html" . }}
+      </section>
+    {{ end }}
+  {{ end }}
+{{ end }}

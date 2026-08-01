@@ -1,0 +1,3 @@
+{{ with .term.Params.kind }}
+  <small class="metadata-heading-kind">{{ printf "%v" . | replaceRE "^.*:" "" }}</small>
+{{ end }}

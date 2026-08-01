@@ -1,0 +1,36 @@
+{{ $term := .page }}
+{{ $taxonomy := .parent }}
+{{ $depictionType := $taxonomy.Params.term.depiction_type | default "depiction" }}
+{{ $depictions := $term.Resources.Match (printf "%s.*" $depictionType) }}
+{{ $personDisplay := $taxonomy.Params.term.person_display | default "Contributors" }}
+
+<article
+  class="metadata-list-item {{ $term.Data.Singular }}"
+  data-kind="{{ $term.Params.kind | default "unknown" }}"
+  data-year="{{ with $term.Params.date }}{{ substr (printf "%v" .) 0 4 }}{{ else }}unknown{{ end }}"
+  data-topic='{{ $term.Params.topic | default (slice) | jsonify }}'
+  data-author='{{ $term.Params.author | default (slice) | jsonify }}'
+  data-title="{{ $term.Title | lower }}"
+>
+  <div class="metadata-list-item-body">
+    <h3>
+      <a href="{{ $term.RelPermalink }}">{{ $term.Title }}</a>
+      {{ with $term.Params.date }}<small>({{ substr (printf "%v" .) 0 4 }})</small>{{ end }}
+      {{ partial "term-heading-kind.html" (dict "term" $term) }}
+      {{ partial "term-heading-identifiers.html" (dict "term" $term) }}
+      {{ partial "term-heading-links.html" (dict "term" $term) }}
+    </h3>
+    {{ partial "term-info-related-terms.html" (dict "term" $term "taxonomy" "persons" "display" $personDisplay) }}
+    {{ partial "term-info-related-terms.html" (dict "term" $term "taxonomy" "projects" "display" "Projects") }}
+  </div>
+  {{ with index $depictions 0 }}
+    <div class="metadata-list-item-depiction">
+      {{ if eq .MediaType.SubType "svg" }}
+        <img src="{{ .RelPermalink }}" alt="">
+      {{ else }}
+        {{ $image := .Fill "240x240 Center" }}
+        <img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="">
+      {{ end }}
+    </div>
+  {{ end }}
+</article>

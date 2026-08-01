@@ -7,16 +7,16 @@ cd "$repository_root"
 metadata_root=${METADATA_ROOT:-metadata}
 build_dir=${BUILD_DIR:-build}
 base_url=${BASE_URL:-http://127.0.0.1:1313/}
+base_url=${base_url%/}/
 port=${DUMPTHINGS_PORT:-8111}
 service_url="http://127.0.0.1:${port}"
 
-uv sync --locked --quiet
-uv run python scripts/prepare_build.py \
+python scripts/prepare_build.py \
   --metadata-root "$metadata_root" \
   --build-dir "$build_dir"
 
 service_log="$build_dir/dump-things.log"
-uv run dump-things-service \
+dump-things-service \
   --host 127.0.0.1 \
   --port "$port" \
   --log-level WARNING \
@@ -45,61 +45,65 @@ for attempt in {1..60}; do
   sleep 1
 done
 
-records_root="$metadata_root/records"
-uv run python scripts/validate_records.py "$records_root" \
-  --service-url "$service_url" \
-  --report "$build_dir/validation-report.json"
-uv run python scripts/test_validation_gate.py \
-  --build-dir "$build_dir" \
-  --service-url "$service_url"
-uv run python scripts/check_relationships.py "$records_root" \
-  --report "$build_dir/relationship-report.json"
-uv run python scripts/test_relationship_gate.py \
-  --records-root "$records_root" \
-  --build-dir "$build_dir"
+# Post the repository's exact YAML records through the upstream client and
+# service. This is a validation write into an ephemeral incoming area; the
+# entire store is discarded after the build.
+validation_log="$build_dir/validation.log"
+: >"$validation_log"
+for stream in "$build_dir"/validation-jsonl/*.jsonl; do
+  class_name=${stream##*/}
+  class_name=${class_name%.jsonl}
+  DTC_TOKEN=preview-validator dtc post-records \
+    "$service_url" research_info "$class_name" \
+    <"$stream" >>"$validation_log" 2>&1
+done
 
 export DTC_TOKEN=preview-reader
 export DUMPTHINGS_APIURL="$service_url"
 export DUMPTHINGS_TOKEN=preview-reader
-export QRI_RECORD_CACHE="$build_dir/qri-cache.json"
+export QRI_RECORD_CACHE="$build_dir/qri-raw-cache.json"
 
-uv run dtc get-records "$service_url" research_info \
+dtc get-records "$service_url" research_info \
   | tee "$build_dir/records.jsonl" \
-  | uv run qri cache >/dev/null
-[[ "$(wc -l < "$build_dir/records.jsonl" | tr -d ' ')" == 5 ]]
+  | qri cache >/dev/null
 
 output_root="$build_dir/hugo/content"
-uv run qri list --pid ror:04tfhh831 \
-  | uv run python scripts/enrich_projection.py --output-root "$output_root" \
-  | uv run qri render-record page_templates/homepage.md.j2 '{output_path}'
-uv run qri list --class xyzri:XYZPerson \
-  | uv run python scripts/enrich_projection.py --output-root "$output_root" \
-  | uv run qri render-record page_templates/person.md.j2 '{output_path}'
-uv run qri list --class xyzri:XYZProject \
-  | uv run python scripts/enrich_projection.py --output-root "$output_root" \
-  | uv run qri render-record page_templates/project.md.j2 '{output_path}'
-uv run qri list --class xyzri:XYZPublication \
-  | uv run python scripts/enrich_projection.py --output-root "$output_root" \
-  | uv run qri render-record page_templates/publication.md.j2 '{output_path}'
-uv run qri list --class xyzri:XYZInstrument \
-  | uv run python scripts/enrich_projection.py --output-root "$output_root" \
-  | uv run qri render-record page_templates/instrument.md.j2 '{output_path}'
+graph_path="$build_dir/hugo/static/graph.json"
+qri list \
+  | python scripts/project_records.py \
+      --site-config "$metadata_root/site.yaml" \
+      --content-root "$output_root" \
+      --base-url "$base_url" \
+      --source-manifest "$build_dir/source-manifest.json" \
+      --graph "$graph_path" \
+      --report "$build_dir/projection-report.json" \
+  | tee "$build_dir/projected-records.jsonl" \
+  | QRI_RECORD_CACHE="$build_dir/qri-projected-cache.json" qri cache >/dev/null
 
-if [[ -n "${HUGO_BIN:-}" ]]; then
-  hugo_bin=$HUGO_BIN
-elif command -v hugo >/dev/null 2>&1 && hugo version | grep -q 'v0.154.5'; then
-  hugo_bin=$(command -v hugo)
-else
-  hugo_bin=$(scripts/install-hugo.sh)
-fi
-"$hugo_bin" version | grep -q 'v0.154.5.*extended'
-"$hugo_bin" \
+# qri rewrites a cache when a process exits. A separate read cache avoids a
+# truncate/read race between `list` and `inline-records` in one pipe.
+cp "$build_dir/qri-projected-cache.json" "$build_dir/qri-inline-cache.json"
+QRI_RECORD_CACHE="$build_dir/qri-projected-cache.json" qri list \
+  | QRI_RECORD_CACHE="$build_dir/qri-inline-cache.json" qri inline-records \
+      -p links_out -p links_in \
+  | qri render-record page_templates/record.md.j2 '{output_path}'
+
+# Build the base-path-aware adaptation of the pinned upstream Sigma renderer.
+npm --prefix graph-renderer ci --ignore-scripts --no-audit --no-fund
+graph_output=$(cd "$build_dir/hugo/static" && pwd)
+npm --prefix graph-renderer run build -- --outDir "$graph_output"
+
+hugo version | grep -q 'v0.154.5.*extended'
+HUGO_RESOURCEDIR="$build_dir/hugo/resources" \
+HUGO_STATICDIR="$build_dir/hugo/static" hugo \
   --minify \
   --cleanDestinationDir \
   --contentDir "$build_dir/hugo/content" \
   --destination "$build_dir/site" \
   --baseURL "$base_url"
 
-uv run python scripts/check_site.py "$build_dir/site" \
+python scripts/check_site.py "$build_dir/site" \
   --base-url "$base_url" \
+  --projected-records "$build_dir/projected-records.jsonl" \
+  --graph "$graph_path" \
   --manifest "$build_dir/site-manifest.sha256"

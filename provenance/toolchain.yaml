@@ -1,10 +1,29 @@
-version: 1
+version: 2
 
-python_environment:
-  uv: 0.7.19
-  python: ">=3.11,<3.14 (CI uses 3.12)"
-  lockfile: uv.lock
-  package_count: 137
+environment:
+  manager: pixi
+  manager_version: 0.73.0
+  manifest: pixi.toml
+  lockfile: pixi.lock
+  platforms: [linux-64, osx-arm64]
+  policy: >-
+    Pixi is the sole build and test environment. The repository does not use a
+    parallel uv environment or download Hugo with a shell installer.
+  packages:
+    python: 3.12.9
+    hugo:
+      version: 0.154.5
+      edition: extended
+    nodejs:
+      manifest_constraint: ">=22,<23"
+      locked_version: 22.23.1
+    git_annex:
+      version: 10.20260601
+      platform: linux-64
+      note: >-
+        Used by Linux CI to hydrate the required legacy asset. Conda-forge has
+        no osx-arm64 package in this lock; asset hydration is outside the Hugo
+        build after the content is present.
 
 orinoco:
   dump_things_service:
@@ -21,6 +40,18 @@ orinoco:
     resolved_version: 0.3.0
   linkml: 1.11.1
   linkml_runtime: 1.11.1
+  validation_path: >-
+    Each exact repository YAML record is serialized to transient JSONL and
+    posted with dtc post-records to an ephemeral Dump Things collection. There
+    is no separate downstream record validator in the publication gate.
+  projection_path:
+    - dtc get-records
+    - qri cache
+    - qri list
+    - scripts/project_records.py
+    - qri cache
+    - qri inline-records
+    - qri render-record
 
 schema:
   repository: https://hub.psychoinformatics.de/orinoco/things-schemas.git
@@ -37,23 +68,33 @@ schema:
   license_notice_sha256: 340b39c29b2368a4743eb33e4286459988fbfd3a70ca89fbfc5f0ef51a741a99
 
 static_site:
-  hugo:
-    version: 0.154.5
-    edition: extended
-    installer: scripts/install-hugo.sh
   congo:
     repository: https://github.com/jpanther/congo.git
     commit: 3623fa505ee42fee899844d94a4ff7f5a1ae9096
     release: v2.13.0
+  graph_renderer:
+    repository: https://hub.psychoinformatics.de/orinoco/things-graph-renderer.git
+    commit: 04f6241e37532fdb03b6f95d2dbe304e7171d504
+    license: MIT
+    license_notice_path: graph-renderer/LICENSE
+    downstream_manifest: graph-renderer/package.json
+    downstream_lockfile: graph-renderer/package-lock.json
+    install: npm ci --ignore-scripts --no-audit --no-fund
+    dependencies:
+      graphology: 0.23.2
+      graphology-layout-forceatlas2: 0.10.1
+      sigma: 3.0.2
+      vite: 5.4.21
 
 github_actions:
   checkout: 3d3c42e5aac5ba805825da76410c181273ba90b1
-  setup_uv: c771a70e6277c0a99b617c7a806ffedaca235ff9
+  setup_pixi: 5185adfbffb4bd703da3010310260805d89ebb11
   configure_pages: 45bfe0192ca1faeb007ade9deae92b16b8254a0d
   upload_pages_artifact: fc324d3547104276b827a68afc52ff2a11cc49c9
   deploy_pages: cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
 
 reproducibility_note: >-
-  uv.lock pins the full Python dependency graph. The Hugo installer verifies
-  official archive checksums for supported macOS and Linux platforms. The
-  Congo gitlink and every workflow action are immutable commit pins.
+  pixi.lock resolves the complete Linux and macOS build environments, including
+  immutable Orinoco VCS commits. package-lock.json pins the graph bundle. The
+  Congo gitlink, schema checksum, annex key, and every workflow action are also
+  immutable inputs.

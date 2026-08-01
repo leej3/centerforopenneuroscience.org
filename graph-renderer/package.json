@@ -1,0 +1,17 @@
+{
+  "name": "orinoco-lite-graph-renderer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "graphology": "0.23.2",
+    "graphology-layout-forceatlas2": "0.10.1",
+    "sigma": "3.0.2"
+  },
+  "devDependencies": {
+    "vite": "5.4.21"
+  }
+}

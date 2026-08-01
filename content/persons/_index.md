@@ -1,7 +1,11 @@
 ---
 title: People
+params:
+  list_variant: grid
+  term:
+    depiction_type: depiction
+    person_display: Collaborators
+    show_relations: expandable
 ---
 
-Meet the people represented in this first metadata-driven CON preview.
-
-- [Yaroslav O. Halchenko]({{< ref "/persons/yaroslav-halchenko" >}})
+People connected to the Center for Open Neuroscience and its work.

@@ -1,0 +1,9 @@
+{{ with .Params.license }}
+  <div class="metadata-term-chips">
+    <em>License:</em>
+    {{ range . }}
+      {{ $license := . }}
+      {{ with .url }}<a href="{{ . }}" target="_blank" rel="external noopener">{{ $license.label | default . }}</a>{{ else }}<span>{{ $license.label }}</span>{{ end }}
+    {{ end }}
+  </div>
+{{ end }}

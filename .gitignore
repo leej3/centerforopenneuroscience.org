@@ -18,6 +18,10 @@ cache/
 __pycache__/
 .tools/
 .venv/
+.pixi/
+graph-renderer/node_modules/
+resources/
 .hugo_build.lock
 build*/
+build*.log
 public/

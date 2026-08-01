@@ -1,0 +1,44 @@
+{{ $currentTaxonomy := .Data.Plural }}
+{{ $singleTerm := .Data.Singular }}
+{{ $filterFields := .Params.filter_fields | default (slice "kind" "year") }}
+{{ $searchFields := .Params.search_fields | default (slice "title" "kind" "year" "author") }}
+{{ $listID := printf "metadata-list-%s" $singleTerm }}
+
+<div id="{{ $listID }}" class="metadata-list-layout" data-filterable-list>
+  <aside class="metadata-filters-panel" aria-label="Filters">
+    <button type="button" class="metadata-clear-button" data-clear-filters>Clear all</button>
+    {{ range $filterFields }}
+      <fieldset class="metadata-filter-block">
+        <legend>{{ . | humanize }}</legend>
+        <div data-filter-group="{{ . }}"></div>
+      </fieldset>
+    {{ end }}
+  </aside>
+  <div class="metadata-results-panel">
+    <label class="sr-only" for="metadata-search-{{ $singleTerm }}">Search {{ $currentTaxonomy }}</label>
+    <input
+      type="search"
+      id="metadata-search-{{ $singleTerm }}"
+      placeholder="Search {{ $currentTaxonomy }}…"
+      class="metadata-search-bar"
+      data-filter-search
+    >
+    <span class="metadata-results-count" data-filter-count aria-live="polite"></span>
+    <div data-filter-results>
+      {{ range .Pages }}
+        {{ $includeItems := $.Params.items | default "generated" }}
+        {{ if or (ne $includeItems "generated") .Params.title }}
+          {{ partial "taxonomy-list-vertical-item.html" (dict "page" . "parent" $) }}
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+</div>
+<script src="{{ "filter-list.js" | relURL }}"></script>
+<script>
+  new FilterableList(document.getElementById('{{ $listID }}'), {
+    itemSelector: '.{{ $singleTerm }}',
+    filters: {{ $filterFields | jsonify | safeJS }},
+    searchFields: {{ $searchFields | jsonify | safeJS }}
+  });
+</script>

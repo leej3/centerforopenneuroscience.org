@@ -1,13 +1,29 @@
-version: 1
-status: temporary-downstream-divergence
+version: 2
+status: temporary-generic-projection-boundary
 
 pinned_context:
   dump_things_service_commit: 9f101d97c7f15d491f602db5a9c33ad9a19ad8bf
   dump_things_service_version: 6.3.6
+  dump_things_pyclient_commit: 1e79391195ad4412286344189dc5f81a06accb90
+  query_things_commit: ef1141430a471455d4a5f4e07d7989ec717f56f4
   linkml_version: 1.11.1
   linkml_runtime_version: 1.11.1
   schema_commit: d26ea4135e28c25b134c64de1cdc15d15cd2f9f0
   schema_sha256: c21bb112d2275e0fcf3d68094c343005040ad59a26724917b3549e537e60968e
+
+publication_gate:
+  direct_upstream_validation: >-
+    The exact repository YAML records are serialized to transient JSONL and
+    posted with dtc post-records to the pinned ephemeral Dump Things service.
+    The former validate_records.py and its parallel downstream validation rules
+    have been removed.
+  qri_sequence:
+    - cache the records returned by dtc
+    - list all validated records
+    - project temporary generic site relations
+    - cache the projected stream
+    - inline links_out and links_in
+    - render one generic record template
 
 observed_failures:
   native_containers:
@@ -30,39 +46,80 @@ observed_failures:
       HTTP 422. The generated API model and internal LinkML loader do not
       accept a common discriminator; internal loading reports that Identifier
       has no matching subclass.
+  minimal_reproducer: scripts/reproduce_schema_discriminator.py
+  detailed_report: docs/upstream-schema-discriminator-issue.md
 
-milestone_workaround:
-  qualified_relationships: >-
-    Preserve selected target PIDs in dlthings:AttributeSpecification values.
-    Use neutral or broadly applicable predicates and record the lost roles in
-    provenance/metadata-selection.yaml.
+milestone_representation:
+  relationships: >-
+    Selected links are PID-valued dlthings:AttributeSpecification assertions
+    that pass the direct upstream post. Generic predicates retain useful
+    machine-readable intent while the native qualified containers are blocked.
   identifiers: >-
-    Preserve DOI and ISSN notations as generic dlthings:Identifier values and
-    enforce their formats in scripts/check_relationships.py.
-  integrity: >-
-    scripts/check_relationships.py checks unique PIDs, target existence and
-    class, required reciprocal links, five-record connectivity, and DOI/ISSN
-    formats. scripts/test_relationship_gate.py proves a dangling target stops
-    publication.
-  projection: >-
-    scripts/enrich_projection.py interprets the fixed reviewed predicates for
-    display. These attributes are not treated as native graph edges, and qri
-    relationship injection or inlining is deliberately not claimed.
+    DOI and ISSN notations remain generic dlthings:Identifier values. Their
+    typed subtype semantics are not claimed by the canonical records under the
+    current pin.
+  source_roles: >-
+    The selected publication is represented with dcterms:creator and the
+    selected project/person link with dcterms:contributor. The more specific
+    source marcrel:aut and marcrel:led qualifiers remain structured in
+    provenance/metadata-selection.yaml for migration to native containers.
 
-semantic_losses:
-  - marcrel:led on the selected DataLad project association
-  - marcrel:aut on the selected publication attribution
-  - native Association, Attribution, and Generation containers
-  - DOI and ISSN subtype and schema-pattern validation
+temporary_boundary:
+  implementation: scripts/project_records.py
+  genericity: >-
+    For every configured compatibility relationship predicate, it requires the
+    assertion target to match a loaded record PID, regardless of whether that
+    PID is a CURIE, DOI URL, or another syntax. It contains no CON PID, label,
+    asset, or per-record route table and does not require reciprocal source
+    assertions.
+  normalization: >-
+    Generic predicate rules map compatible assertions to about,
+    attributed_to, associated_with, or related_to edges and merge duplicate
+    reciprocal evidence.
+  retained_assertions: >-
+    Every projected edge carries a sorted list of the unchanged source,
+    predicate, and target assertions that produced it. The qri-inlined
+    links_out and links_in objects therefore retain their evidence rather than
+    reconstructing it from labels or paths.
+  generated_consumers:
+    - forward Hugo taxonomy terms, with both directions only for symmetric
+      related_to edges
+    - reverse backlinks supplied by each target term's Hugo .Data.Pages
+    - related-record lists and collection filters
+    - compact per-record and homepage graph navigation
+    - generic generated _index.md term bundles
+  integrity_check: >-
+    Any target of a configured relationship predicate that is absent from the
+    loaded record set fails projection; this applies to every PID syntax rather
+    than a prefix heuristic. The milestone test also injects a sixth
+    metadata-only project and requires its page and graph node without code,
+    route, template, or index changes.
+
+remaining_limitations:
+  - Native Association, Attribution, and Generation class semantics are not in
+    the posted records.
+  - The specific marcrel lead and author qualifiers are migration provenance,
+    not native qualified roles in the canonical records.
+  - DOI and ISSN are not typed subclasses under the current pin.
+  - The projected graph is derived from retained assertions; it does not claim
+    that the pinned schema can already round-trip native graph containers.
+
+update_policy: >-
+  Treat schema, Dump Things, dtc, qri, LinkML, and LinkML Runtime as one tested
+  compatibility tuple. Do not add PID-specific tables or a growing sequence of
+  version-specific rewrites. A candidate tuple must first pass native
+  Association, Attribution, Generation, DOI, and ISSN fixtures through both the
+  direct Dump Things post and qri round trip.
 
 removal_condition: >-
-  Before the complete migration, pin a tested schema/service/toolchain in which
-  native Association, Attribution, Generation, DOI, and ISSN fixtures all pass
-  the Dump Things endpoint and round-trip through qri. Then migrate these
-  attributes back to native qualified relations and typed identifiers, remove
-  the fixed projection interpretations, and retain the compatibility probe as
-  a regression test.
+  After such a tuple is pinned, update pixi.lock and the checksummed schema
+  snapshot together; migrate the canonical assertions and the structured
+  source roles in metadata-selection.yaml back to native qualified relations
+  and typed identifiers; then remove only the compatibility normalization from
+  project_records.py. Generic class routing, generated taxonomies, backlinks,
+  and graph output may remain. Convert the failure reproducer into a positive
+  regression test.
 
 contribution_scope: >-
-  No generic upstream fix is claimed in Milestone 1. Any reusable fix must be
-  isolated and tested in the relevant Orinoco repository.
+  No generic upstream fix is claimed in Milestone 1. A reusable fix should be
+  isolated and tested in LinkML or the relevant Orinoco repository.

@@ -1,0 +1,18 @@
+{{ $identifiers := .term.Params.identifiers | default (slice) }}
+{{ with .term.Params.doi }}
+  {{ $identifiers = append $identifiers (slice (dict "creator" "DOI" "notation" .)) }}
+{{ end }}
+{{ with $identifiers }}
+  <span class="metadata-heading-identifiers">
+    {{ range . }}
+      {{ $creator := .creator | default "Identifier" }}
+      {{ if reflect.IsMap $creator }}{{ $creator = $creator.name | default "Identifier" }}{{ end }}
+      {{ $notation := .notation | default "" }}
+      {{ if and (eq $creator "DOI") $notation }}
+        <a href="https://doi.org/{{ $notation }}" target="_blank" rel="external noopener" title="DOI {{ $notation }}">DOI</a>
+      {{ else if $notation }}
+        <span title="{{ $notation }}">{{ $creator }}</span>
+      {{ end }}
+    {{ end }}
+  </span>
+{{ end }}

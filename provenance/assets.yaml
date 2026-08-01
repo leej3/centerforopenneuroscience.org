@@ -1,33 +1,54 @@
-version: 1
+version: 2
 legacy_commit: e6e9200a0987a65097afff896105ff838be1659e
 
 assets:
   assets/img/con-logo.png:
     source_path: theme/static/img/logos/logo_blue_big.png
+    storage: git
     sha256: 4d6b2cf29b18e7c0bb744cc18f5dc5c54e262d08cf26423eef953e2873619ff7
     role: raster navigation logo required by Congo image sizing
   assets/img/con-logo.svg:
     source_path: theme/static/img/logos/logo_blue_big.svg
+    storage: git
     sha256: 39aa8c6f8c5274a92c2f72d52969ac1717c9bdc18b3069894263751dc63abd57
     role: site logo
   assets/img/datalad-logo.png:
     source_path: theme/static/img/3rd/datalad_logo.png
+    storage: git
     sha256: e145c07b7a9515a94664b326f1b9c31993833c3726425bbe73c1ddbde5073f10
     role: project depiction
   assets/img/yaroslav-halchenko.jpg:
     source_path: theme/static/img/team/yarik.jpg
-    recovery_url: https://centerforopenneuroscience.org/theme/img/team/yarik.jpg
-    legacy_annex_key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+    storage: git-annex
+    annex_key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+    md5: 90e74fa17a709006dd527c5b36e41217
     sha256: 8df356e4845e3546fdbb2d055332ff4c655913688ab6c4a5e676a50ce5bd8403
     role: person depiction
     note: >-
-      The Git tree contains an unlocked git-annex pointer and the annex
-      metadata reports no available copies. The deployed file matched the
-      key's size and MD5 and is retained here as a normal Git object.
+      Reuses the legacy annex key. Availability was verified directly against
+      the datasets.datalad.org remote on 2026-07-31.
   static/favicon.svg:
     source_path: theme/static/img/logos/favicon.svg
+    storage: git
     sha256: 8bfa2493885ece86259ee1ae293261deb7bd803984d2a0b2bb3069cb78a0d1d0
     role: browser icon
+
+required_annex_assets:
+  remote: datasets.datalad.org
+  url: https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+  readonly: true
+  retrieval: >-
+    CI fetches the remote git-annex branch, enables this remote, retrieves the
+    exact key, and runs git annex fsck before validation or rendering.
+  assets:
+    - path: assets/img/yaroslav-halchenko.jpg
+      key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+
+storage_policy: >-
+  The logo and favicon files above are small blobs already present in the
+  pinned legacy CON history and remain ordinary Git objects at their Hugo
+  asset paths. Yaroslav's pre-existing large-file key remains in git-annex; its
+  content was not recreated or converted into a new Git blob.
 
 approval_source:
   repository: https://github.com/con/dump-research-info.git

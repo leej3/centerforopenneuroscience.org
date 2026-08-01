@@ -1,0 +1,23 @@
+{{ $rootPID := .Param "graphRootNodePID" }}
+<div
+  class="metadata-graph"
+  data-graph-url="{{ "graph.json" | relURL }}"
+  data-site-root="{{ .Site.Home.RelPermalink }}"
+  data-root-node="{{ $rootPID }}"
+>
+  {{ with .Param "graphDescription" }}
+    <p class="metadata-graph-description">{{ . }}</p>
+  {{ end }}
+  <div class="metadata-graph-canvas" data-graph-canvas>
+    <p class="metadata-graph-status" data-graph-status>Loading related records…</p>
+  </div>
+  <div class="metadata-graph-controls" data-graph-controls aria-label="Graph node types"></div>
+  <details class="metadata-graph-alternative">
+    <summary>Relationship graph as links</summary>
+    <ul data-graph-links>
+      <li>Loading relationship links…</li>
+    </ul>
+  </details>
+  <noscript><p class="metadata-graph-status">Enable JavaScript to use the relationship graph.</p></noscript>
+</div>
+<script type="module" src="{{ "graph.js" | relURL }}"></script>

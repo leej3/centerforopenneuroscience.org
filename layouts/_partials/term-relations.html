@@ -1,0 +1,8 @@
+{{ if .Data.Pages }}
+  <section class="metadata-relations">
+    {{ range (.Paginate .Pages).Pages }}
+      {{ partial "article-link.html" . }}
+    {{ end }}
+  </section>
+  {{ partial "pagination.html" . }}
+{{ end }}

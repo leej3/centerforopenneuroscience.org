@@ -1,3 +1,14 @@
-<article class="prose max-w-full dark:prose-invert">
-  <section>{{ .Content | emojify }}</section>
+<link rel="stylesheet" href="{{ "graph.css" | relURL }}">
+<article class="metadata-home-layout">
+  <section class="prose max-w-full dark:prose-invert">
+    {{ .Content | emojify }}
+    {{ with .Param "metadataPID" }}
+      <p class="metadata-record-id">Metadata record: <code>{{ . }}</code></p>
+    {{ end }}
+  </section>
+  {{ if .Param "graphRootNodePID" }}
+    <aside class="metadata-home-graph" aria-label="Related metadata graph">
+      {{ partial "metadata-graph.html" . }}
+    </aside>
+  {{ end }}
 </article>

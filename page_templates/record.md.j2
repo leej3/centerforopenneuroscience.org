@@ -1,0 +1,49 @@
+{%- set authors = [] -%}
+{%- for link in links_out | default([]) -%}
+  {%- if link.predicate == 'attributed_to' -%}
+    {%- set _ = authors.append({"pid": link.object.pid, "display_label": link.object.page_title}) -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- set page_params = {
+  "graphRootNodePID": pid,
+  "metadataPID": pid,
+  "metadataSchemaType": schema_type,
+  "description": description | default(none),
+  "kind": kind | default(none),
+  "identifiers": identifiers | default([]),
+  "date": date | default(none),
+  "external_links": external_links | default([]),
+  "author": authors,
+  "sortkey": ((date | default('', true)) ~ page_title),
+} -%}
+{%- if pid.startswith('https://doi.org/') or pid.startswith('http://doi.org/') -%}
+  {%- set _ = page_params.update({"doi": pid.split('doi.org/', 1)[1]}) -%}
+{%- endif -%}
+{%- for link in external_links | default([]) -%}
+  {%- if link.label == 'Source code' -%}
+    {%- set _ = page_params.update({"source_code_url": link.url}) -%}
+  {%- elif link.label == 'Documentation' -%}
+    {%- set _ = page_params.update({"documentation_url": link.url}) -%}
+  {%- endif -%}
+{%- endfor -%}
+---
+title: {{ page_title | toyaml | replace('...\n', '') | trim }}
+type: {{ class_section }}
+{% for taxonomy, terms in taxonomies.items() -%}
+{{ taxonomy }}:
+{% for term in terms -%}
+  - {{ term | toyaml | replace('...\n', '') | trim }}
+{% endfor -%}
+{% endfor -%}
+params:
+{{ page_params | toyaml | trim | indent(2, true) }}
+---
+{% if not site_path -%}
+{{ description }}
+
+## Connected records
+
+{% for link in links_out -%}
+- **{{ link.relation_label }}:** [{{ link.object.page_title }}]({{ link.object.page_ref }})
+{% endfor -%}
+{% endif -%}

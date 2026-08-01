@@ -1,0 +1,4 @@
+<span class="metadata-related-item">
+  <a href="{{ .RelPermalink }}">{{ .Title | emojify }}</a>
+  {{ with .Params.date }}<small>({{ substr (printf "%v" .) 0 4 }})</small>{{ end }}
+</span>

@@ -1,0 +1,29 @@
+[workspace]
+name = "orinoco-lite-con-preview"
+version = "0.1.0"
+description = "Pinned validation, projection, and Hugo environment for the CON preview"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64"]
+
+[dependencies]
+python = "==3.12.9"
+hugo = "==0.154.5"
+nodejs = ">=22,<23"
+
+[target.linux-64.dependencies]
+git-annex = "==10.20260601"
+
+[pypi-dependencies]
+dump-things-pyclient = { git = "https://hub.psychoinformatics.de/orinoco/dump-things-pyclient.git", rev = "1e79391195ad4412286344189dc5f81a06accb90" }
+dump-things-service = { git = "https://hub.psychoinformatics.de/orinoco/dump-things-service.git", rev = "9f101d97c7f15d491f602db5a9c33ad9a19ad8bf" }
+jinja2 = "==3.1.6"
+pyyaml = "==6.0.2"
+query-things = { git = "https://hub.psychoinformatics.de/orinoco/query-things.git", rev = "ef1141430a471455d4a5f4e07d7989ec717f56f4" }
+
+[pypi-options.dependency-overrides]
+dump-things-pyclient = { git = "https://hub.psychoinformatics.de/orinoco/dump-things-pyclient.git", rev = "1e79391195ad4412286344189dc5f81a06accb90" }
+
+[tasks]
+check-environment = "python --version && hugo version && node --version && npm --version"
+build = "scripts/build.sh"
+test-milestone = "scripts/test-milestone.sh"

@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 legacy_site:
   repository: https://github.com/con/centerforopenneuroscience.org
@@ -14,6 +14,13 @@ www_from_model:
   ref: main
   reviewed_commit: 6945272e5f3fcf353627b8e1c3e68bcaf76cc2ce
   adoption: selective
+
+things_graph_renderer:
+  repository: https://hub.psychoinformatics.de/orinoco/things-graph-renderer.git
+  ref: main
+  reviewed_commit: 04f6241e37532fdb03b6f95d2dbe304e7171d504
+  adoption: selective-adaptation
+  role: interactive-metadata-navigation
 
 metadata_migration:
   repository: https://github.com/con/dump-research-info.git

@@ -1,4 +1,4 @@
-version: 2
+version: 3
 
 www_from_model:
   repository: https://hub.psychoinformatics.de/www/www-from-model.git
@@ -15,36 +15,94 @@ www_from_model:
     - assets/icons/human-dolly.svg
     - assets/icons/mdi-microscope.svg
     - config/_default/markup.toml
-    - config/_default/taxonomies.toml
   adapted_after_import:
-    - path: assets/css/custom.css
-      reason: CON palette, typography, navigation, and selected asset treatment
-    - path: config/_default/hugo.toml
-      reason: static preview outputs, CNAME exclusion, and candidate defaults
-    - path: config/_default/languages.en.toml
-      reason: CON identity and metadata
-    - path: config/_default/menus.en.toml
-      reason: CON primary navigation
-    - path: config/_default/module.toml
-      reason: exact Hugo compatibility boundary
-    - path: config/_default/params.toml
-      reason: CON branding and no live-pool editing links
-    - path: layouts/_partials/home/custom.html
-      reason: remove upstream live graph and pool assumptions
-    - path: layouts/_partials/home/page.html
-      reason: candidate homepage rendering
-    - path: page_templates/homepage.md.j2
-      reason: organization-rooted connected preview
-    - path: page_templates/instrument.md.j2
-      reason: explicit path adapter and selected project relationship
-    - path: page_templates/page.md.j2
-      reason: explicit output path and deterministic metadata fingerprint
-    - path: page_templates/person.md.j2
-      reason: selected project relationship
-    - path: page_templates/project.md.j2
-      reason: temporary validated-attribute relationship projection
-    - path: page_templates/publication.md.j2
-      reason: DOI-safe path and explicitly partial authorship
+    - paths:
+        - assets/css/custom.css
+        - config/_default/hugo.toml
+        - config/_default/languages.en.toml
+        - config/_default/menus.en.toml
+        - config/_default/module.toml
+        - config/_default/params.toml
+        - config/_default/taxonomies.toml
+      reason: >-
+        CON identity, navigation, palette, Pages base paths, exact Hugo
+        compatibility, and all supported research-information taxonomies.
+    - paths:
+        - content/instruments/_index.md
+        - content/persons/_index.md
+        - content/projects/_index.md
+        - content/publications/_index.md
+      reason: >-
+        Human-authored collection labels and display policy only. Record
+        membership and individual term bundles are generated from metadata.
+    - paths:
+        - layouts/taxonomy.html
+        - layouts/term.html
+        - layouts/_partials/related-by-category-lists.html
+        - layouts/_partials/related-list-item.html
+        - layouts/_partials/related-publications-list-item.html
+        - layouts/_partials/taxonomy-list-filter.html
+        - layouts/_partials/taxonomy-list-grid.html
+        - layouts/_partials/taxonomy-list-vertical-item.html
+        - layouts/_partials/taxonomy-list-vertical.html
+        - layouts/_partials/term-heading-identifiers.html
+        - layouts/_partials/term-heading-kind.html
+        - layouts/_partials/term-heading-links.html
+        - layouts/_partials/term-info-licenses.html
+        - layouts/_partials/term-info-links.html
+        - layouts/_partials/term-info-related-terms.html
+        - layouts/_partials/term-relations.html
+      reason: >-
+        Generated Hugo taxonomy navigation, reverse related-record lists,
+        depictions, identifiers, external links, and filterable collections.
+    - paths:
+        - layouts/_partials/extend-head.html
+        - layouts/_partials/home/custom.html
+        - layouts/_partials/home/page.html
+      reason: CON metadata homepage, branding, and compact side-graph layout.
+    - paths:
+        - static/filter-list.css
+        - static/filter-list.js
+        - static/grid-list.css
+      reason: >-
+        Base-path-safe metadata collection presentation and client-side
+        filtering without a service dependency.
+  workflow_behavior_adopted:
+    source: .forgejo/workflows/update-from-pool.yaml
+    retained_sequence:
+      - qri cache
+      - qri list
+      - qri inline-records
+      - qri render-record
+    downstream_entrypoint: scripts/build.sh
+    difference: >-
+      The source collection is an ephemeral repository-local Dump Things store,
+      and one generic template writes generated term bundles under build/.
+
+things_graph_renderer:
+  repository: https://hub.psychoinformatics.de/orinoco/things-graph-renderer.git
+  commit: 04f6241e37532fdb03b6f95d2dbe304e7171d504
+  license: MIT
+  exact_copies:
+    - downstream: graph-renderer/LICENSE
+      upstream: LICENSE
+  adapted_paths:
+    - downstream: graph-renderer/main.js
+      upstream: main.js
+      reason: >-
+        Retain Graphology, ForceAtlas2, Sigma, immediate-neighborhood pruning,
+        type controls, highlighting, and node navigation while accepting Hugo
+        data URLs and a page-specific root.
+    - downstream: graph-renderer/package.json
+      upstream: package.json
+      reason: exact runtime dependency pins and library-bundle build.
+    - downstream: graph-renderer/package-lock.json
+      upstream: package-lock.json
+      reason: regenerated lock for the exact downstream dependency set.
+    - downstream: static/graph.css
+      upstream: style.css
+      reason: compact responsive side panel integrated with Congo.
+  locally_authored_build_wrapper: graph-renderer/vite.config.js
 
 congo:
   repository: https://github.com/jpanther/congo.git
@@ -54,22 +112,34 @@ congo:
 
 excluded_upstream_components:
   - path: code/project.py
-    reason: TRR379-specific and unused by the reviewed upstream workflow
+    reason: TRR379-specific and unused by the reviewed upstream workflow.
   - path: code/pool2graph.py
-    reason: graph presentation is not required for the vertical slice
+    reason: >-
+      Assumes upstream native link shapes. The single generic projection emits
+      graph JSON from the same normalized assertions used for page navigation.
+  - path: page_templates/*.md.j2
+    reason: Replaced by one generic metadata-driven record template.
   - path: .forgejo/workflows/register-depictions.yaml
-    reason: depends on the live pool, downloaded code, and git-annex
+    reason: >-
+      Depends on a live pool and depiction registration. Reviewed repository
+      assets are used instead, with required large content kept in git-annex.
   - path: .forgejo/workflows/deploy.yml
-    reason: targets a private Forgejo runner and mutable webserver directory
+    reason: Targets a private Forgejo runner and mutable webserver directory.
   - path: orinoco/flow@main
-    reason: mutable action replaced by repository-local pinned commands
+    reason: Mutable action replaced by repository-local commands and lockfiles.
 
 locally_authored_boundaries:
-  - .github/workflows/pages-preview.yml
+  - .github/workflows/
+  - pixi.toml
+  - pixi.lock
   - scripts/
+  - page_templates/record.md.j2
   - provenance/schema-compatibility.yaml
   - metadata/records/
-  - content/
-  - layouts/_partials/extend-head.html
+  - metadata/site.yaml
+  - layouts/_partials/metadata-graph.html
   - layouts/_partials/favicons.html
+  - layouts/_shortcodes/asset-image.html
+  - assets/css/schemes/con.css
+  - static/favicon.svg
   - static/site.webmanifest

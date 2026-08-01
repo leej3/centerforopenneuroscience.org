@@ -1,0 +1,24 @@
+{{ define "main" }}
+  <link rel="stylesheet" href="{{ "grid-list.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "filter-list.css" | relURL }}">
+  <header>
+    {{ if .Params.showBreadcrumbs | default (.Site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+  </header>
+  {{ with .Content }}
+    <section class="prose mt-0 max-w-full dark:prose-invert">
+      {{ . | emojify }}
+    </section>
+  {{ end }}
+  <article class="prose max-w-full dark:prose-invert">
+    {{ if .Params.filter | default false }}
+      {{ partial "taxonomy-list-filter.html" . }}
+    {{ else if eq (.Params.list_variant | default "grid") "vertical" }}
+      {{ partial "taxonomy-list-vertical.html" . }}
+    {{ else }}
+      {{ partial "taxonomy-list-grid.html" . }}
+    {{ end }}
+  </article>
+{{ end }}
