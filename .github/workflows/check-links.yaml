@@ -27,6 +27,8 @@ jobs:
 
       - name: Retrieve the required legacy annex content
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           pixi run --locked git annex init github-actions
           git remote add datasets.datalad.org https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
           git fetch datasets.datalad.org git-annex:refs/remotes/datasets.datalad.org/git-annex
