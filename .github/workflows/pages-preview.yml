@@ -38,7 +38,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           pixi run --locked git annex init github-actions
-          git remote add datasets.datalad.org https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+          if git remote get-url datasets.datalad.org >/dev/null 2>&1; then
+            git remote set-url datasets.datalad.org https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+          else
+            git remote add datasets.datalad.org https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+          fi
           git fetch datasets.datalad.org git-annex:refs/remotes/datasets.datalad.org/git-annex
           pixi run --locked git annex enableremote datasets.datalad.org
           pixi run --locked git annex get --from datasets.datalad.org assets/img/yaroslav-halchenko.jpg
