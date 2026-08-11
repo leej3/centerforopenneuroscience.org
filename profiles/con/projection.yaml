@@ -10,14 +10,14 @@ snapshot:
   format: qri-record-jsonl
   collection: con-public
   sort_key: [schema_type, pid]
-  expected_records:
-    canonical: 6
-    reference: 4
 
 render:
   engine: qri
   content_root: profiles/con/projection/content
   pages:
+    xyzri:XYZDataset: page_templates/dataset.md.j2
+    xyzri:XYZObjective: page_templates/objective.md.j2
+    xyzri:XYZTopic: page_templates/topic.md.j2
     xyzri:XYZProject: page_templates/project.md.j2
     xyzri:XYZPerson: page_templates/person.md.j2
     xyzri:XYZPublication: page_templates/publication.md.j2
@@ -34,35 +34,38 @@ render:
 graph:
   producer: code/pool2graph.py
   output: profiles/con/projection/static/graph.json
+  node_classes:
+    - xyzri:XYZDataset
+    - xyzri:XYZInstrument
+    - xyzri:XYZObjective
+    - xyzri:XYZOrganization
+    - xyzri:XYZPerson
+    - xyzri:XYZProject
+    - xyzri:XYZPublication
+    - xyzri:XYZTopic
+  relationship_fields:
+    - about
+    - associated_with
+    - attributed_to
+    - delegated_by
+    - generated_by
+    - influenced_by
+    - part_of
   missing_external_targets: reject
 
 digest:
   algorithm: sha256
   output: profiles/con/projection/SHA256SUMS
   scope:
-    - config/con
     - profiles/con/profile.yaml
     - profiles/con/projection.yaml
     - profiles/con/metadata
-    - profiles/con/editorial/content
-    - profiles/con/provenance
-    - profiles/con/assets
-    - profiles/con/static
-    - profiles/con/projection/content
-    - profiles/con/projection/records.jsonl
-    - profiles/con/projection/static/graph.json
-    - upstream:config/_default
-    - upstream:layouts
     - upstream:page_templates
     - upstream:code/pool2graph.py
-    - parent:pixi.toml
-    - parent:pixi.lock
-    - parent:provenance/upstream-psychoinformatics/baseline.yaml
-    - parent:tools/adapt_upstream_pages.py
-    - parent:tools/build_con_site.py
-    - parent:tools/con_assets.py
+    - parent:submodules/things-schemas/src/demo-research-information/unreleased.yaml
     - parent:tools/con_projection.py
     - component-commit-pins
+    - projection-runtime-pins
 
 policy:
   canonical_source: profiles/con/metadata

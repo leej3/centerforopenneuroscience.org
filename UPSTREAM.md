@@ -1,8 +1,10 @@
-# Clean-migration upstream policy
+# Full CON migration upstream policy
 
-The `codex/clean-migration` branch is a downstream site profile based directly on `www-from-model` commit `5b401e0c478a4409442b3a8a285bd3efd5d30e05`.
-This history choice intentionally supersedes the earlier prototype policy that kept the website on the legacy CON ancestry.
-The legacy branches and tag remain unchanged and available as migration evidence.
+The `codex/full-con-migration` branch continues the accepted clean-migration site profile on `www-from-model` commit `a9ac9d5abc3898fd13d9b8392008f0c323c8dcd8`.
+The reviewed upstream range from `5b401e0` contains one CI-only workflow change and no presentation change.
+
+The accepted `codex/clean-migration` branch remains an unchanged checkpoint.
+The legacy branches and tag also remain unchanged and available as migration evidence.
 
 ## Overlay boundary
 
@@ -15,15 +17,29 @@ It does not include a vendored schema, LinkML fork, generic relationship bridge,
 The committed projection is a reviewable static snapshot, not a second canonical metadata source.
 Its records, Markdown, graph, and digest are regenerated from the canonical YAML with the component revisions in `profiles/con/profile.yaml`.
 
+## Successor history policy
+
+The two rebased clean-migration commits preserve the accepted experiment.
+New work uses ordinary, reviewable commits:
+
+1. a stable full-migration profile and validation commit;
+2. hand-authored content batches organized by a coherent migration scope; and
+3. one terminal generated-projection commit.
+
+Before adding another content batch, remove the terminal projection commit, make and review the hand-authored change, and regenerate a new terminal snapshot.
+Generated conflicts are never resolved by hand during an upstream rebase.
+
 ## Synchronization policy
 
 Upstream synchronization is deliberate:
 
 1. Record and review the new `www-from-model` commit.
-2. Rebase the two downstream commits onto that exact commit.
-3. Confirm that the rebase did not change upstream `content/`, `layouts/`, `page_templates/`, or workflow files.
-4. Regenerate only `profiles/con/projection/` with the pinned source schema, Dump Things, `qri`, and upstream graph implementation.
-5. Verify the projection digest, native-CURIE validation, Hugo build, and `git range-diff` before updating the reviewed commit in the profile.
+2. Preserve the old downstream range and remove the terminal projection commit from the working branch.
+3. Rebase the profile and hand-authored content commits onto that exact upstream commit.
+4. Confirm that the rebase did not change upstream `content/`, `layouts/`, `page_templates/`, or workflow files.
+5. Regenerate only `profiles/con/projection/` with the pinned source schema, Dump Things, `qri`, and upstream graph implementation.
+6. Create a new terminal projection commit.
+7. Verify the projection digest, native-CURIE validation, Hugo build, browser acceptance, and `git range-diff` before updating the parent gitlink.
 
 Generated upstream content is never merged into the CON profile.
 Likewise, CON projection files never replace upstream content paths.

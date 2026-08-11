@@ -15,6 +15,9 @@ paths:
   content: profiles/con/projection/content
   graph: profiles/con/projection/static/graph.json
   digest: profiles/con/projection/SHA256SUMS
+  assembly: profiles/con/assembly.yaml
+  assembly_digest: profiles/con/assembly/SHA256SUMS
+  presentation: profiles/con/presentation.yaml
   assets: profiles/con/assets
 
 schema:
@@ -33,7 +36,7 @@ homepage:
 components:
   www_from_model:
     repository: https://hub.psychoinformatics.de/www/www-from-model.git
-    commit: 5b401e0c478a4409442b3a8a285bd3efd5d30e05
+    commit: a9ac9d5abc3898fd13d9b8392008f0c323c8dcd8
   congo:
     repository: https://github.com/leej3/congo.git
     commit: 3623fa505ee42fee899844d94a4ff7f5a1ae9096
@@ -55,4 +58,11 @@ build:
   metadata_collection: con-public
   backend: ephemeral
   deployed_backend: none
-  projection_policy: committed-isolated-snapshot
+  projection_policy: terminal-regenerable-snapshot
+
+acceptance:
+  representative_records:
+    person: xyzrins:persons/yaroslav-halchenko
+    project: xyzrins:projects/datalad
+    publication: xyzrins:publications/datalad-joss-2021
+    instrument: xyzrins:instruments/datalad
