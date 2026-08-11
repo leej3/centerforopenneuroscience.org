@@ -13,6 +13,9 @@ description: >-
   leading DANDI, DataLad, PyMVPA, and NeuroDebian projects. Serves on BIDS and
   NWB technical advisory committees.
 attributes:
+  - predicate: vcard:Email
+    value: yaroslav.o.halchenko@oneukrainian.com
+    schema_type: dlthings:AttributeSpecification
   - predicate: foaf:homepage
     value: https://centerforopenneuroscience.org/whoweare
     schema_type: dlthings:AttributeSpecification
