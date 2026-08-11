@@ -1,0 +1,28 @@
+version: 1
+manifest: profiles/con/assets.yaml
+
+legacy_source:
+  repository: https://github.com/con/centerforopenneuroscience.org.git
+  commit: e6e9200a0987a65097afff896105ff838be1659e
+
+verified_assets:
+  - path: profiles/con/assets/img/con-logo.png
+    sha256: 4d6b2cf29b18e7c0bb744cc18f5dc5c54e262d08cf26423eef953e2873619ff7
+    storage: git
+  - path: profiles/con/assets/img/con-logo.svg
+    sha256: 39aa8c6f8c5274a92c2f72d52969ac1717c9bdc18b3069894263751dc63abd57
+    storage: git
+  - path: profiles/con/assets/img/datalad-logo.png
+    sha256: e145c07b7a9515a94664b326f1b9c31993833c3726425bbe73c1ddbde5073f10
+    storage: git
+  - path: profiles/con/assets/img/yaroslav-halchenko.jpg
+    sha256: 8df356e4845e3546fdbb2d055332ff4c655913688ab6c4a5e676a50ce5bd8403
+    storage: git-annex
+    annex_key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+
+projection_policy: >-
+  The committed projection contains no duplicate asset payloads. The local
+  build materializes the manifest-declared page-bundle paths only in ignored
+  Hugo assembly state. The portrait payload must be hydrated from the
+  read-only annex remote before Hugo runs and is never converted to a Git
+  blob.
