@@ -62,6 +62,7 @@ digest:
     - profiles/con/metadata
     - upstream:page_templates
     - upstream:code/pool2graph.py
+    - upstream:.forgejo/workflows/update-from-pool.yaml
     - parent:submodules/things-schemas/src/demo-research-information/unreleased.yaml
     - parent:tools/con_projection.py
     - component-commit-pins
