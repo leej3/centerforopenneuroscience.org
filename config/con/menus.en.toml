@@ -1,17 +1,25 @@
 _merge = "none"
 
 [[main]]
+  name = "About"
+  pageRef = "about"
+  weight = 10
+  [main.params]
+    icon = "circle-info"
+    showName = true
+
+[[main]]
   name = "Projects"
   pageRef = "projects"
-  weight = 10
+  weight = 20
   [main.params]
     icon = "human-dolly"
     showName = true
 
 [[main]]
   name = "People"
-  pageRef = "persons"
-  weight = 20
+  pageRef = "whoweare"
+  weight = 30
   [main.params]
     icon = "account-group"
     showName = true
@@ -19,7 +27,7 @@ _merge = "none"
 [[main]]
   name = "Publications"
   pageRef = "publications"
-  weight = 30
+  weight = 50
   [main.params]
     icon = "cast-education"
     showName = true
@@ -27,22 +35,30 @@ _merge = "none"
 [[main]]
   name = "Outputs"
   pageRef = "instruments"
-  weight = 40
+  weight = 60
   [main.params]
     icon = "mdi-microscope"
     showName = true
 
 [[main]]
+  name = "Explore"
+  pageRef = "explore"
+  weight = 70
+  [main.params]
+    icon = "globe"
+    showName = true
+
+[[main]]
   name = "Engage"
   pageRef = "engage"
-  weight = 50
+  weight = 80
 
 [[main]]
   name = "Support"
   pageRef = "support"
-  weight = 60
+  weight = 90
 
 [[footer]]
   name = "Contact"
   pageRef = "contact"
-  weight = 10
+  weight = 100

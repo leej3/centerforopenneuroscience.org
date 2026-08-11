@@ -9,4 +9,5 @@ params:
     show_relations: expandable
 ---
 
-People connected to the Center for Open Neuroscience and its work.
+Browse the complete set of metadata-driven CON person pages.
+The [Who we are page]({{< ref "/whoweare" >}}) preserves the legacy public groups and their published order.
