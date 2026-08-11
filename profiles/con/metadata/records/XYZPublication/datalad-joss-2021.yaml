@@ -1,0 +1,31 @@
+pid: xyzrins:publications/datalad-joss-2021
+schema_type: xyzri:XYZPublication
+title: "DataLad: distributed system for joint management of code, data, and their relationship"
+display_label: "DataLad: distributed system for joint management of code, data, and their relationship"
+description: >-
+  Halchenko et al. (2021). DataLad: distributed system for joint management of
+  code, data, and their relationship. Journal of Open Source Software, 6(63),
+  3262. https://doi.org/10.21105/joss.03262
+kind: bibo:AcademicArticle
+identifiers:
+  - notation: 10.21105/joss.03262
+    schema_type: dlthings:DOI
+  - notation: 2475-9066
+    schema_type: dlthings:ISSN
+attributed_to:
+  - object: xyzrins:persons/yaroslav-halchenko
+    roles:
+      - marcrel:aut
+    schema_type: dlthings:Attribution
+generated_by:
+  - object: xyzrins:projects/datalad
+    at_location: ISSN:2475-9066
+    at_time: "2021-07-01"
+    schema_type: dlthings:Generation
+attributes:
+  - predicate: bibo:locator
+    value: 6, 63, 3262
+    schema_type: dlthings:AttributeSpecification
+  - predicate: dcterms:language
+    value: en
+    schema_type: dlthings:AttributeSpecification
