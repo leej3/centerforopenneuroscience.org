@@ -1,0 +1,38 @@
+# Declaring mounts disables Hugo's implicit project mounts. List the upstream
+# presentation sources explicitly, while replacing only content with the CON
+# profile projection.
+[[mounts]]
+  source = "archetypes"
+  target = "archetypes"
+
+[[mounts]]
+  source = "profiles/con/assets"
+  target = "assets"
+
+[[mounts]]
+  source = "assets"
+  target = "assets"
+
+[[mounts]]
+  source = "profiles/con/editorial/content"
+  target = "content"
+
+[[mounts]]
+  source = "profiles/con/projection/content"
+  target = "content"
+
+[[mounts]]
+  source = "layouts"
+  target = "layouts"
+
+[[mounts]]
+  source = "profiles/con/static"
+  target = "static"
+
+[[mounts]]
+  source = "profiles/con/projection/static"
+  target = "static"
+
+[[mounts]]
+  source = "static"
+  target = "static"

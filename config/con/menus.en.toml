@@ -1,0 +1,48 @@
+_merge = "none"
+
+[[main]]
+  name = "Projects"
+  pageRef = "projects"
+  weight = 10
+  [main.params]
+    icon = "human-dolly"
+    showName = true
+
+[[main]]
+  name = "People"
+  pageRef = "persons"
+  weight = 20
+  [main.params]
+    icon = "account-group"
+    showName = true
+
+[[main]]
+  name = "Publications"
+  pageRef = "publications"
+  weight = 30
+  [main.params]
+    icon = "cast-education"
+    showName = true
+
+[[main]]
+  name = "Outputs"
+  pageRef = "instruments"
+  weight = 40
+  [main.params]
+    icon = "mdi-microscope"
+    showName = true
+
+[[main]]
+  name = "Engage"
+  pageRef = "engage"
+  weight = 50
+
+[[main]]
+  name = "Support"
+  pageRef = "support"
+  weight = 60
+
+[[footer]]
+  name = "Contact"
+  pageRef = "contact"
+  weight = 10
