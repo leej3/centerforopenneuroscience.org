@@ -1,0 +1,61 @@
+version: 1
+profile: con
+
+assets:
+  profiles/con/assets/img/con-logo.svg:
+    source_repository: https://github.com/con/centerforopenneuroscience.org.git
+    source_commit: e6e9200a0987a65097afff896105ff838be1659e
+    source_path: theme/static/img/logos/logo_blue_big.svg
+    storage: git
+    sha256: 39aa8c6f8c5274a92c2f72d52969ac1717c9bdc18b3069894263751dc63abd57
+    role: site-brand
+  profiles/con/assets/img/con-logo.png:
+    source_repository: https://github.com/con/centerforopenneuroscience.org.git
+    source_commit: e6e9200a0987a65097afff896105ff838be1659e
+    source_path: theme/static/img/logos/logo_blue_big.png
+    storage: git
+    size: 37225
+    sha256: 4d6b2cf29b18e7c0bb744cc18f5dc5c54e262d08cf26423eef953e2873619ff7
+    role: upstream-compatible-header-brand
+  profiles/con/assets/img/datalad-logo.png:
+    source_repository: https://github.com/con/centerforopenneuroscience.org.git
+    source_commit: e6e9200a0987a65097afff896105ff838be1659e
+    source_path: theme/static/img/3rd/datalad_logo.png
+    storage: git
+    sha256: e145c07b7a9515a94664b326f1b9c31993833c3726425bbe73c1ddbde5073f10
+    role: project-and-instrument-depiction
+  profiles/con/assets/img/yaroslav-halchenko.jpg:
+    source_repository: https://github.com/con/centerforopenneuroscience.org.git
+    source_commit: e6e9200a0987a65097afff896105ff838be1659e
+    source_path: theme/static/img/team/yarik.jpg
+    storage: git-annex
+    annex_key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+    size: 37940
+    md5: 90e74fa17a709006dd527c5b36e41217
+    sha256: 8df356e4845e3546fdbb2d055332ff4c655913688ab6c4a5e676a50ce5bd8403
+    role: person-portrait
+
+annex_remote:
+  name: datasets.datalad.org
+  repository: https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/
+  object_url: https://datasets.datalad.org/centerforopenneuroscience/con.org/.git/annex/objects/6p/30/MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg/MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+  mode: read-only
+  required_key: MD5E-s37940--90e74fa17a709006dd527c5b36e41217.jpg
+  destination: profiles/con/assets/img/yaroslav-halchenko.jpg
+  retrieval_policy: hydrate-before-hugo-build
+
+projection_links:
+  profiles/con/projection/content/projects/datalad/logo.png: profiles/con/assets/img/datalad-logo.png
+  profiles/con/projection/content/instruments/datalad/logo.png: profiles/con/assets/img/datalad-logo.png
+  profiles/con/projection/content/persons/yaroslav-halchenko/portrait.jpg: profiles/con/assets/img/yaroslav-halchenko.jpg
+
+static_links:
+  profiles/con/static/apple-touch-icon.png: profiles/con/assets/img/con-logo.png
+  profiles/con/static/favicon-16x16.png: profiles/con/assets/img/con-logo.png
+  profiles/con/static/favicon-32x32.png: profiles/con/assets/img/con-logo.png
+  profiles/con/static/mstile-150x150.png: profiles/con/assets/img/con-logo.png
+
+storage_policy: >-
+  Brand and DataLad logo assets remain ordinary Git blobs. The Yaroslav
+  portrait remains the legacy annex key and must never be recommitted as an
+  ordinary Git blob. Projection bundle links contain no duplicate payloads.

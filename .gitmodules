@@ -1,5 +1,5 @@
 [submodule "themes/congo"]
 	path = themes/congo
-	url = https://github.com/jpanther/congo.git
+	url = https://github.com/leej3/congo.git
 	branch = stable
 	shallow = true
