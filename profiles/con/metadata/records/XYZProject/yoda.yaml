@@ -1,12 +1,11 @@
-pid: xyzrins:projects/datalad
+pid: xyzrins:projects/yoda
 schema_type: xyzri:XYZProject
-title: DataLad
-short_name: DataLad
-display_label: DataLad
+title: YODA's Organigram on Data Analysis
+short_name: YODA
+display_label: YODA
 description: >-
-  A data management platform that adapts open-source software distribution
-  models to address data-sharing limitations. Provides a versatile data
-  management platform using git-annex for large data tracking built on Git.
+  Collection of best practices for organizing and managing digital objects of
+  science.
 part_of:
   - xyzrins:.
 associated_with:
@@ -14,11 +13,11 @@ associated_with:
     roles:
       - marcrel:led
     schema_type: dlthings:Association
-  - object: xyzrins:persons/matteo-visconti-di-oleggio-castello
+  - object: xyzrins:persons/kyle-meyer
     roles:
       - marcrel:ctb
     schema_type: dlthings:Association
-  - object: xyzrins:persons/kyle-meyer
+  - object: xyzrins:persons/matteo-visconti-di-oleggio-castello
     roles:
       - marcrel:ctb
     schema_type: dlthings:Association
@@ -28,9 +27,9 @@ associated_with:
     schema_type: dlthings:Association
   - object: xyzrins:persons/yaroslav-halchenko
     roles:
-      - marcrel:led
+      - marcrel:ctb
     schema_type: dlthings:Association
 attributes:
   - predicate: foaf:homepage
-    value: https://datalad.org
+    value: https://github.com/myyoda/myyoda
     schema_type: dlthings:AttributeSpecification
