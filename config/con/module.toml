@@ -22,6 +22,10 @@
   target = "content"
 
 [[mounts]]
+  source = "profiles/con/layouts"
+  target = "layouts"
+
+[[mounts]]
   source = "layouts"
   target = "layouts"
 

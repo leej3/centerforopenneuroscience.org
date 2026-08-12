@@ -12,6 +12,7 @@ digest:
     - profiles/con/assets.yaml
     - profiles/con/assets
     - profiles/con/editorial/content
+    - profiles/con/layouts
     - profiles/con/projection/SHA256SUMS
     - profiles/con/projection/content
     - profiles/con/projection/records.jsonl
