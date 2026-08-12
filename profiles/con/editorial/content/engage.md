@@ -51,13 +51,9 @@ Its [artwork sources](https://github.com/neurodebian/neurodebian) are public.
 A double-sided introduction to [DataLad]({{< ref "/projects/datalad" >}}) and [git-annex](https://git-annex.branchable.com).
 The [artwork sources](https://github.com/datalad/artwork) are public.
 
-{{< figure src="img/editorial/engage/unclesam-preview.png" alt="Preview of the DataLad Uncle Sam poster" class="mx-auto max-w-2xl" >}}
+{{< artwork-preview preview="img/editorial/engage/unclesam-preview.png" full="img/editorial/engage/unclesam.png" alt="Preview of the DataLad Uncle Sam poster; follow for the full-resolution artwork" class="mx-auto max-w-2xl" >}}
 
-{{< figure src="img/editorial/engage/unclesam.png" alt="Full DataLad Uncle Sam poster artwork" class="mx-auto max-w-2xl" >}}
-
-{{< figure src="img/editorial/engage/fromtar-preview.png" alt="Preview of the From TAR to DataLad poster" class="mx-auto max-w-2xl" >}}
-
-{{< figure src="img/editorial/engage/fromtar.png" alt="Full From TAR to DataLad poster artwork" class="mx-auto max-w-2xl" >}}
+{{< artwork-preview preview="img/editorial/engage/fromtar-preview.png" full="img/editorial/engage/fromtar.png" alt="Preview of the From TAR to DataLad poster; follow for the full-resolution artwork" class="mx-auto max-w-2xl" >}}
 
 ### BIDS
 

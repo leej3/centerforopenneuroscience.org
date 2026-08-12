@@ -1,6 +1,7 @@
 colorScheme = "con"
 defaultAppearance = "light"
 autoSwitchAppearance = true
+enableQuicklink = false
 
 [header]
   layout = "hybrid"
